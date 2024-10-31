@@ -1,0 +1,2 @@
+param($input="ccode.c")
+emcc -o ($input -replace '\.c$','.html') $input --shell-file 'C:/Users/icecloud/emsdk/upstream/emscripten/src/shell_minimal.html' -s NO_EXIT_RUNTIME=1 -s "EXPORTED_RUNTIME_METHODS=['ccall','cwrap']"

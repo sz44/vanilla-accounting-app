@@ -1,0 +1,82 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        body {
+            margin: 0;
+            height: 100vh;
+
+        }
+        dialog {
+           margin: auto; 
+           padding: 1rem;
+        }
+        header {
+            /* max-width: 60%; */
+            display: flex;
+            justify-content: center;
+            /* text-align: center;  */
+        }
+        nav {
+            display: flex;
+            justify-content: space-between;
+        }
+        #main-nav {
+            display: flex;
+        }
+    </style>
+</head>
+<body>
+    <div style="display:flex; justify-content: space-between; max-width:60%;">
+        <div>a</div>
+        <div>b</div>
+    </div>
+    <header>
+        <nav>
+            <div>Reconcilliation App</div>
+            <div id="main-nav">
+                <div>a</div>
+                <div>b</div>
+            </div>
+        </nav>
+    </header>
+    <section>
+        <p>Enter numbers here:</p>
+        <div>
+            <textarea name="" id="" cols="10" rows="10"></textarea> 
+            <textarea name="" id="" cols="10" rows="10"></textarea> 
+        </div>
+        <button id="compute">Compute</button>
+    </section>
+    <dialog close>
+        <p>Time to compute: </p>
+        <button id="confirm">Confirm</button>
+        <button id="cancel">Cancel</button>
+    </dialog>
+    <script src="script.js"></script>
+    <script>
+        const dialog = document.querySelector("dialog")
+        const computeBtn = document.querySelector("#compute")
+        const confirmBtn = document.querySelector("#confirm") 
+        const cancelBtn = document.querySelector("#cancel") 
+
+        computeBtn.addEventListener("click", () => {
+            dialog.showModal()
+        })
+        confirmBtn.addEventListener("click", () => {
+
+        })
+        cancelBtn.addEventListener("click", () => {
+            dialog.close()
+        })
+    </script>
+</body>
+</html>

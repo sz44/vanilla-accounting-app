@@ -1,0 +1,222 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Number Input Web App</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body,
+        html {
+            height: 100%;
+            font-family: Arial, sans-serif;
+            display: flex;
+            flex-direction: column;
+        }
+
+        /* Top Navigation */
+        nav {
+            background-color: #333;
+            color: #fff;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 1em 2em;
+        }
+
+        .nav-left,
+        .nav-center {
+            display: flex;
+            align-items: center;
+        }
+
+        .nav-left a {
+            color: #fff;
+            text-decoration: none;
+            font-size: 1.2em;
+            font-weight: bold;
+        }
+
+        .nav-center a {
+            color: #fff;
+            text-decoration: none;
+            margin: 0 0.5em;
+            font-size: 1em;
+            transition: color 0.3s ease;
+        }
+
+        .nav-center a:hover {
+            color: #ccc;
+        }
+
+        /* Main Section */
+        main {
+            flex: 1;
+            display: flex;
+            justify-content: center;
+            /* align-items: center; */
+            padding: 2em;
+        }
+
+        .container {
+            text-align: center;
+            width: 100%;
+            max-width: 600px;
+        }
+
+        #big-text {
+            margin: 2em 0;
+        }
+
+        .instructions {
+            text-align: left;
+            margin-bottom: 1em;
+            font-size: 1em;
+        }
+
+        .input-section {
+            display: flex;
+            gap: 1em;
+            margin-bottom: 1em;
+            justify-content: center;
+        }
+
+        .labels {
+            display: flex;
+            gap: 1em;
+            justify-content: center;
+        }
+
+        .box {
+            width: 117px;
+        }
+
+        textarea {
+            padding: 1em;
+            font-size: 1em;
+            resize: vertical;
+            min-height: 150px;
+            border: 1px solid #ccc;
+            border-radius: 4px;
+        }
+
+        button {
+            background-color: #333;
+            color: #fff;
+            padding: 0.7em 1.5em;
+            font-size: 1em;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            transition: background-color 0.3s ease;
+        }
+
+        button:hover {
+            background-color: #555;
+        }
+
+        dialog {
+            margin: auto;
+            padding: 2em;
+        }
+
+        #estimate {
+            margin-bottom: 2em;
+        }
+
+        /* Footer */
+        footer {
+            background-color: #333;
+            color: #fff;
+            text-align: center;
+            padding: 1em;
+        }
+    </style>
+</head>
+
+<body>
+
+    <!-- Top Navigation -->
+    <nav>
+        <div class="nav-left">
+            <a href="#">Home</a>
+        </div>
+        <div class="nav-center">
+            <a href="#">Help</a>
+            <a href="#">Pricing</a>
+            <a href="#">About</a>
+        </div>
+    </nav>
+
+    <!-- Main Section -->
+    <main>
+        <div class="container">
+            <h1 id="big-text">Reconcilliation Helper</h1>
+            <div class="instructions">
+                
+                <p>Instructions: Enter numbers in the boxes below. Left column should hold individual numbers and right column aggragated sums.</p>
+            </div>
+            <div class="labels">
+                <div class="box">Individual</div>
+                <div class="box">Aggragates</div>
+            </div>
+            <div class="input-section">
+                <textarea cols="10" rows="20" placeholder="Enter numbers here..."></textarea>
+                <textarea cols="10" placeholder="Enter numbers here..."></textarea>
+            </div>
+            <button type="submit" id="submit">Submit</button>
+        </div>
+    </main>
+
+    <!-- Confirm Dialog-->
+    <dialog>
+        <div id="estimate">
+            Estimated time: 2 hours
+        </div>
+        <div>
+            <button id="accept">accept</button>
+            <button id="cancel">cancel</button>
+        </div>
+    </dialog>
+    <!-- Footer -->
+    <footer>
+        <p>&copy; 2024 Number Input Web App</p>
+    </footer>
+    <script>
+        const submitBtn = document.querySelector("#submit");
+        const acceptBtn = document.querySelector("#accept");
+        const cancelBtn = document.querySelector("#cancel");
+
+        const dialog = document.querySelector("dialog");
+        
+        submitBtn.addEventListener("click", () => {
+            dialog.showModal()
+        })
+        cancelBtn.addEventListener("click", () => {
+            dialog.close();
+        })
+        acceptBtn.addEventListener("click", () => {
+            // collect numbers (determine which aggragates)
+            // run wasm script with numbers input 
+            // issue: what if not all are aggragates
+        })
+    </script>
+    <script src="c/ccode.js"></script>
+    <script>
+       Module.onRuntimeInitialized = () => {
+           // Initialize cSum when WASM is ready
+           cSum = Module.cwrap("sum", 'number', ['number', 'number']);
+           console.log('WASM loaded and cSum is ready to use');
+           // Test the function
+           console.log('Test sum(2,3):', cSum(2,3));
+       } 
+    </script>
+</body>
+
+</html>

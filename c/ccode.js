@@ -1254,7 +1254,6 @@ function dbg(...args) {
   var cwrap = (ident, returnType, argTypes, opts) => {
       return (...args) => ccall(ident, returnType, argTypes, args, opts);
     };
-
 function checkIncomingModuleAPI() {
   ignoredModuleProp('fetchSettings');
 }
@@ -1270,7 +1269,7 @@ var wasmExports = createWasm();
 var ___wasm_call_ctors = createExportWrapper('__wasm_call_ctors', 0);
 var _myFunction = Module['_myFunction'] = createExportWrapper('myFunction', 2);
 var _sum = Module['_sum'] = createExportWrapper('sum', 2);
-var _both = Module['_both'] = createExportWrapper('both', 4);
+var _both = Module['_both'] = createExportWrapper('both', 5);
 var _malloc = Module['_malloc'] = createExportWrapper('malloc', 1);
 var _main = createExportWrapper('main', 2);
 var _fflush = createExportWrapper('fflush', 1);
@@ -1291,7 +1290,6 @@ var dynCall_jiji = Module['dynCall_jiji'] = createExportWrapper('dynCall_jiji', 
 
 Module['ccall'] = ccall;
 Module['cwrap'] = cwrap;
-Module['writeArrayToMemory'] = writeArrayToMemory;
 var missingLibrarySymbols = [
   'writeI53ToI64',
   'writeI53ToI64Clamped',
@@ -1526,6 +1524,7 @@ var unexportedSymbols = [
   'lengthBytesUTF8',
   'UTF16Decoder',
   'stringToUTF8OnStack',
+  'writeArrayToMemory',
   'JSEvents',
   'specialHTMLTargets',
   'findCanvasEventTarget',

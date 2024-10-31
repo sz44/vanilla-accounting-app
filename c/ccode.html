@@ -124,13 +124,6 @@
           statusElement.innerHTML = text;
         },
         totalDependencies: 0,
-        onRuntimeInitialized: function() {
-          // Initialize cSum when WASM is ready
-          cSum = Module.cwrap("sum", 'number', ['number', 'number']);
-          console.log('WASM loaded and cSum is ready to use');
-          // Test the function
-          console.log('Test sum(2,3):', cSum(2,3));
-        },
         monitorRunDependencies: (left) => {
           this.totalDependencies = Math.max(this.totalDependencies, left);
           Module.setStatus(left ? 'Preparing... (' + (this.totalDependencies-left) + '/' + this.totalDependencies + ')' : 'All downloads complete.');
@@ -146,11 +139,5 @@
       };
     </script>
     <script async type="text/javascript" src="ccode.js"></script>
-    <script>
-      setTimeout(()=> {
-        const cSum = Module.cwrap("sum", 'number', ['number', 'number']);
-        console.log(cSum(2,3));
-      },500)
-    </script>
   </body>
 </html>

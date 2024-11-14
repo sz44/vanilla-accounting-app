@@ -148,7 +148,8 @@
             <a href="#">Home</a>
         </div>
         <div class="nav-center">
-            <a href="#">Help</a>
+            <a href="#">FAQ</a>
+            <a href="#">help</a>
             <a href="#">Pricing</a>
             <a href="#">About</a>
         </div>
@@ -209,13 +210,44 @@
     </script>
     <script src="c/ccode.js"></script>
     <script>
-       Module.onRuntimeInitialized = () => {
-           // Initialize cSum when WASM is ready
-           cSum = Module.cwrap("sum", 'number', ['number', 'number']);
-           console.log('WASM loaded and cSum is ready to use');
-           // Test the function
-           console.log('Test sum(2,3):', cSum(2,3));
-       } 
+        let cBoth;
+        Module.onRuntimeInitialized = () => {
+            console.log('WASM loaded and cSum is ready to use');
+            // Initialize cSum when WASM is ready
+            const cSum = Module.cwrap("sum", 'number', ['number', 'number']);
+            // Test the function
+            console.log('Test sum(2,3):', cSum(2, 3));
+
+            cBoth = Module.cwrap("both", 'number', ['number', 'number', 'number', 'number', 'number']);
+
+            let leftSize = 5;
+            let rightSize = 4;
+            let left = [1,2,3,4,5]
+            let right = [4,5,6,7]
+            // Allocate memory in the WASM heap for the left and right arrays
+            const leftPtr = Module._malloc(leftSize * Int32Array.BYTES_PER_ELEMENT);
+            const rightPtr = Module._malloc(rightSize * Int32Array.BYTES_PER_ELEMENT);
+            const lenOutPtr = Module._malloc(8);
+            // Copy the arrays into the allocated memory
+            Module.HEAP32.set(left, leftPtr >> 2);
+            Module.HEAP32.set(right, rightPtr >> 2);
+            
+
+            // Call the `both` function with the pointers and sizes
+            const ptr = cBoth(leftPtr, leftSize, rightPtr, rightSize, lenOutPtr);
+
+            let lenOut = Module.HEAP32[lenOutPtr >> 2];
+
+            const out = []
+            for (let i = 0; i < lenOut; i++ ) {
+                out.push(Module.HEAP32[(ptr >> 2) + i]);
+            }
+
+            Module._free(ptr);
+
+            console.log(out);
+
+        } 
     </script>
 </body>
 

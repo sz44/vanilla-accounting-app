@@ -212,48 +212,24 @@
     <script>
         let cBoth;
         Module.onRuntimeInitialized = () => {
-            console.log('lerp result: ' + Module.lerp(1, 2, 0.5));
-            // console.log('intersect result: ' + Module.intersect([1,2,3], [2,4]));
-            // Assuming `Module` is your Emscripten module
-            const vec1 = new Module['vectorInt']();
-            const vec2 = new Module['vectorInt']();
-
-            // Populate the vectors
-            [1, 2, 3].forEach(v => vec1.push_back(v));
-            [2, 4].forEach(v => vec2.push_back(v));
-
-            // Call the `intersect` function
-            const result = Module.intersect(vec1, vec2);
-
-            // Convert the result (which is a `vector<int>`) back to a JavaScript array
-            const resultArray = [];
-            for (let i = 0; i < result.size(); i++) {
-                resultArray.push(result.get(i));
-            }
-
-            // Print the result
-            console.log('intersect result:', resultArray);
-
-            // Clean up memory
-            vec1.delete();
-            vec2.delete();
-            result.delete();
-
             let js_nums = [3,-2,5,-8,6,-1];
             let t = 4;
 
-            const nums = new Module['vectorInt']();
-            js_nums.forEach(n => nums.push_back(n))
+            const numsVector = new Module['vectorInt']();
+            js_nums.forEach(n => numsVector.push_back(n))
 
-            const res = Module.subsetSum(nums, t);
+            const resultVector = Module.subsetSum(numsVector, t);
 
-            const resArr = [];
-            for (let i = 0; i < res.size(); i++) {
-                resArr.push(res.get(i));
+            const result = [];
+            for (let i = 0; i < resultVector.size(); i++) {
+                result.push(resultVector.get(i));
             }
 
-            console.log(`Subset with sum ${t} is: ${resArr}`);
-            
+            console.log(`Subset with sum ${t} is: ${result}`);
+
+            // Clean up memory
+            numsVector.delete();
+            resultVector.delete();
         } 
     </script>
     </body>

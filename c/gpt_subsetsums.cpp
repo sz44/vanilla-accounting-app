@@ -16,37 +16,42 @@ vector<int> subsetSum(const vector<int>& nums, int target) {
     int shift = -minSum; // Offset for negative sums
 
     // DP array to track achievable sums
-    vector<bool> dp(range + 1, false);
-    dp[shift] = true; // Zero sum is always possible
+    vector<bool> prev(range + 1, false);
+    prev[shift] = true; // Zero sum is always possible
+    vector<bool> curr(range + 1, false);
 
     // Parent map to track subsets
-    unordered_map<int, int> parent; // sum -> contributing number
+    unordered_map<int, int> parent;
 
     // Update DP for each number
-    for (int num : nums) {
-        // Traverse backwards to avoid overwriting during updates
-        for (int j = range; j >= 0; --j) {
-            if (j - num >= 0 && j - num <= range && dp[j - num]) {
-                if (!dp[j]) { // Only update if sum wasn't already achievable
-                    dp[j] = true;
-                    parent[j - shift] = num; // Store the contributing number
-                }
+    for (int num:nums) {
+        for (int j = 0; j <= range; ++j) {
+            if (prev[j]) {
+                curr[j] = true;
+            // check if within possiblilites [minSum,maxSum],
+            // if true can check if with this num curr target is achievable
+            } else if(j - num >= 0 && j - num <= range && prev[j - num]) {
+                curr[j] = true;
+                parent[j - shift] = num; // Store the contributing number and index
             }
         }
+        prev = curr;
     }
 
     // Check if the target sum is achievable
-    if (!(target + shift >= 0 && target + shift <= range && dp[target + shift])) {
+    if (!(target + shift >= 0 && target + shift <= range && curr[target + shift])) {
         return {}; // Return an empty vector if target sum is not achievable
     }
 
     // Retrieve the subset
     vector<int> result;
     int currSum = target;
+
     while (currSum != 0) {
-        int contributingNum = parent[currSum];
-        result.push_back(contributingNum);
-        currSum -= contributingNum;
+        // using find to avoid potential infinite loops...
+        auto contributingNum = parent.find(currSum);
+        result.push_back(contributingNum->second);
+        currSum -= contributingNum->second;
     }
 
     return result;
@@ -54,6 +59,7 @@ vector<int> subsetSum(const vector<int>& nums, int target) {
 
 int main() {
     vector<int> nums = {3, -2, 5, -8, 6, -1};
+    // vector<int> nums = {6, -2, 1};
     int target = 4;
 
     vector<int> result = subsetSum(nums, target);

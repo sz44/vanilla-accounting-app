@@ -5,6 +5,10 @@
 using namespace std;
 
 vector<int> subsetSum(const vector<int>& nums, int target) {
+    if (nums.empty()) {
+        return {};
+    }
+
     // Calculate the range of possible sums
     int minSum = 0, maxSum = 0;
     for (int num : nums) {
@@ -50,6 +54,9 @@ vector<int> subsetSum(const vector<int>& nums, int target) {
     while (currSum != 0) {
         // using find to avoid potential infinite loops...
         auto contributingNum = parent.find(currSum);
+        if (contributingNum == parent.end()) {
+            return {};
+        }
         result.push_back(contributingNum->second);
         currSum -= contributingNum->second;
     }
@@ -60,7 +67,7 @@ vector<int> subsetSum(const vector<int>& nums, int target) {
 int main() {
     vector<int> nums = {3, -2, 5, -8, 6, -1};
     // vector<int> nums = {6, -2, 1};
-    int target = 4;
+    int target = 7;
 
     vector<int> result = subsetSum(nums, target);
 

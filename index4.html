@@ -161,7 +161,7 @@
             <h1 id="big-text">Reconcilliation Helper</h1>
             <div class="instructions">
                 
-                <p>Instructions: Enter numbers in the boxes below. Left column should hold individual numbers and right column aggragated sums.</p>
+                <p>Instructions: Enter numbers in the boxes below. One number per row. Left column should hold individual numbers and right column aggragated sums.</p>
             </div>
             <div class="labels">
                 <div class="box">Individual</div>
@@ -187,7 +187,7 @@
     </dialog>
     <!-- Footer -->
     <footer>
-        <p>&copy; 2024 Number Input Web App</p>
+        <p>&copy; 2024 Accountant Helper</p>
     </footer>
     <script>
         const submitBtn = document.querySelector("#submit");
@@ -216,8 +216,6 @@
             // console.log('intersect result: ' + Module.intersect([1,2,3], [2,4]));
             // Assuming `Module` is your Emscripten module
             const vec1 = new Module['vectorInt']();
-            console.log(vec1);
-            
             const vec2 = new Module['vectorInt']();
 
             // Populate the vectors

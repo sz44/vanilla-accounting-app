@@ -3,6 +3,7 @@
 #include <algorithm>
 #include <set>
 #include <iostream>
+#include "gpt_subsetsums.cpp"
 #include <emscripten/bind.h>
 
 using namespace emscripten;
@@ -19,10 +20,11 @@ std::vector<int> intersect(std::vector<int> s1, std::vector<int> s2) {
 
 
 EMSCRIPTEN_BINDINGS(my_module) {
-    function("lerp", &lerp);
-    function("intersect", &intersect);
+    emscripten::function("lerp", &lerp);
+    emscripten::function("intersect", &intersect);
+    emscripten::function("subsetSum", &subsetSum);
 
-    register_vector<int>("vectorInt");
+    emscripten::register_vector<int>("vectorInt");
 }
 
 // int main() {

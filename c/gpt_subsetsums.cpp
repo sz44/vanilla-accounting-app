@@ -64,22 +64,22 @@ vector<int> subsetSum(const vector<int>& nums, int target) {
     return result;
 }
 
-int main() {
-    vector<int> nums = {3, -2, 5, -8, 6, -1};
-    // vector<int> nums = {6, -2, 1};
-    int target = 7;
+// int main() {
+//     vector<int> nums = {3, -2, 5, -8, 6, -1};
+//     // vector<int> nums = {6, -2, 1};
+//     int target = 7;
 
-    vector<int> result = subsetSum(nums, target);
+//     vector<int> result = subsetSum(nums, target);
 
-    if (!result.empty()) {
-        cout << "Subset with sum " << target << " is: ";
-        for (int num : result) {
-            cout << num << " ";
-        }
-        cout << endl;
-    } else {
-        cout << "No subset with sum " << target << " exists." << endl;
-    }
+//     if (!result.empty()) {
+//         cout << "Subset with sum " << target << " is: ";
+//         for (int num : result) {
+//             cout << num << " ";
+//         }
+//         cout << endl;
+//     } else {
+//         cout << "No subset with sum " << target << " exists." << endl;
+//     }
 
-    return 0;
-}
+//     return 0;
+// }

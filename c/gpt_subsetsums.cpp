@@ -64,6 +64,39 @@ vector<int> subsetSum(const vector<int>& nums, int target) {
     return result;
 }
 
+double estimateTimeOne(const vector<int>& nums, const int k) {
+    vector<int> nums1 = {1, 2, 3, 4, 5, 6, 7, 8, 9, 10};
+    int k1 = 55;
+    clock_t start_time = clock();
+    subsetSum(nums1, k1);
+    clock_t end_time = clock();
+    double elapsed_time = double(end_time - start_time) / CLOCKS_PER_SEC;
+    double mn = static_cast<double>(nums.size()) / 10;
+    if (mn < 1) {
+        mn = 1;
+    }
+    double mk = static_cast<double>(k) / 55;
+    if (mk < 1) {
+        mk = 1;
+    }
+    double estimate = elapsed_time * mn * mk;
+    return estimate;
+}
+
+double estimateTime(const vector<int> &nums, const vector<int> &targets) {
+    auto mx = max_element(targets.begin(), targets.end());
+    auto e = estimateTimeOne(nums, *mx);
+    return e * targets.size();
+}
+
+int main() {
+    vector<int> nums = {3, -2, 5, -8, 6, -1};
+    vector<int> targets = {3, -2, 5, -8, 6, -1};
+    // vector<int> nums = {6, -2, 1};
+    int target = 7;
+    cout << estimateTime(nums, targets) << endl;
+}
+
 // int main() {
 //     vector<int> nums = {3, -2, 5, -8, 6, -1};
 //     // vector<int> nums = {6, -2, 1};

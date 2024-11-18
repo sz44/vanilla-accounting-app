@@ -6,6 +6,9 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Number Input Web App</title>
     <style>
+        :root {
+            --green: #293830;
+        }
         * {
             margin: 0;
             padding: 0;
@@ -22,7 +25,8 @@
 
         /* Top Navigation */
         nav {
-            background-color: #333;
+            /* background-color: #333; */
+            background-color: var(--green);
             color: #fff;
             display: flex;
             align-items: center;
@@ -107,7 +111,7 @@
         }
 
         button {
-            background-color: #333;
+            background-color: var(--green);
             color: #fff;
             padding: 0.7em 1.5em;
             font-size: 1em;
@@ -118,11 +122,11 @@
         }
 
         button:hover {
-            background-color: #555;
+            /* background-color: #555; */
+            background-color: #3a983e;
         }
 
-        dialog {
-            margin: auto;
+        dialog { margin: auto;
             padding: 2em;
         }
 
@@ -132,11 +136,21 @@
 
         /* Footer */
         footer {
-            background-color: #333;
+            background-color: var(--green);
             color: #fff;
             text-align: center;
             padding: 1em;
         }
+        /* Utility */
+
+        .input-section textarea {
+            border: 2px solid green;
+        }
+
+        .input-section .error {
+            border: 2px solid red !important;
+        }
+
     </style>
 </head>
 
@@ -168,15 +182,15 @@
                 <div class="box">Aggragates</div>
             </div>
             <div class="input-section">
-                <textarea cols="10" rows="20" placeholder="Enter numbers here..."></textarea>
-                <textarea cols="10" placeholder="Enter numbers here..."></textarea>
+                <textarea id="leftTextBox" cols="10" rows="20" placeholder="Enter numbers here..." required></textarea>
+                <textarea id="rightTextBox" cols="10" placeholder="Enter numbers here..." required></textarea>
             </div>
             <button type="submit" id="submit">Submit</button>
         </div>
     </main>
 
     <!-- Confirm Dialog-->
-    <dialog>
+    <dialog id="confirmDialog">
         <div id="estimate">
             Estimated time: 2 hours
         </div>
@@ -190,22 +204,77 @@
         <p>&copy; 2024 Accountant Helper</p>
     </footer>
     <script>
+        const leftTextBox = document.querySelector("#leftTextBox");
+        const rightTextBox = document.querySelector("#rightTextBox");
+        const textBoxes = document.querySelectorAll(".input-section textarea");
         const submitBtn = document.querySelector("#submit");
         const acceptBtn = document.querySelector("#accept");
         const cancelBtn = document.querySelector("#cancel");
 
-        const dialog = document.querySelector("dialog");
+        const confirmDialog = document.querySelector("#confirmDialog");
         
         submitBtn.addEventListener("click", () => {
-            dialog.showModal()
-        })
-        cancelBtn.addEventListener("click", () => {
-            dialog.close();
-        })
+            // validate not empty
+            // validate numbers
+            let leftText = leftTextBox.value.trim();
+            let rightText = rightTextBox.value.trim();
+            let leftValid = true;
+            let rightValid = true;
+
+            // check if textareas empty
+            if (leftText === "") {
+                leftValid = false;
+                leftTextBox.classList.add("error");
+            } 
+            if (rightText === "") {
+                rightValid = false;
+                rightTextBox.classList.add("error");
+            } 
+            // check strings for valid numbers and create int arrays
+            let leftArr = [];
+            let leftStrArr = leftText.split("\n");
+            leftStrArr.forEach(str => {
+                let n = Number.parseFloat(str);
+                if (Number.isNaN(n)) {
+                    leftValid = false;
+                    leftTextBox.classList.add("error");
+                } else {
+                    leftArr.push(n);
+                }
+            });
+            
+            let rightArr = [];
+            let rightStrArr = rightText.split("\n");
+            rightStrArr.forEach(str => {
+                let n = Number.parseFloat(str);
+                if (Number.isNaN(n)) {
+                    rightValid = false;
+                    rightTextBox.classList.add("error");
+                } else {
+                    rightArr.push(n);
+                }
+            });
+
+            if (!leftValid || !rightValid) {
+                return
+            }
+
+            leftTextBox.classList.remove("error");
+            rightTextBox.classList.remove("error");
+
+            console.log(leftArr, rightArr);
+            
+
+            confirmDialog.showModal();
+        });
+
         acceptBtn.addEventListener("click", () => {
             // collect numbers (determine which aggragates)
             // run wasm script with numbers input 
             // issue: what if not all are aggragates
+        });
+        cancelBtn.addEventListener("click", () => {
+            confirmDialog.close();
         })
     </script>
     <script src="c/quick_example.js"></script>

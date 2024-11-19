@@ -71,6 +71,8 @@ double estimateTimeOne(const vector<int>& nums, const int k) {
     subsetSum(nums1, k1);
     clock_t end_time = clock();
     double elapsed_time = double(end_time - start_time) / CLOCKS_PER_SEC;
+    elapsed_time = max(1.0, elapsed_time);
+
     double mn = static_cast<double>(nums.size()) / 10;
     if (mn < 1) {
         mn = 1;

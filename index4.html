@@ -142,6 +142,7 @@
         #estimate {
             margin-bottom: 2em;
             display: flex;
+            flex-direction: column;
             justify-content: center;
             align-items: center;
         }
@@ -302,14 +303,6 @@
             <button id="cancel" disabled>cancel</button>
         </div>
     </dialog>
-    <div style="text-align: center;">
-        <div class="loader"></div>
-        <!-- <div class="lds-ellipsis">
-            <div></div>
-            <div></div>
-            <div></div>
-        </div> -->
-    </div>
     <!-- Footer -->
     <footer>
         <p>&copy; 2024 Accountant Helper</p>
@@ -353,12 +346,15 @@
         const loader = document.querySelector(".loader");
         // const loader = document.querySelector(".lds-ellipsis");
 
-
         let leftArr = [];
         let rightArr = [];
         
         submitBtn.addEventListener("click", async () => {
+            // reset
             estimate.textContent = "";
+            leftArr = [];
+            rightArr = [];
+
             let leftText = leftTextBox.value.trim();
             let rightText = rightTextBox.value.trim();
             let leftValid = true;
@@ -436,8 +432,36 @@
             const timeResult = Module.estimateTime(numsVector, targetsVector);
             console.log(timeResult);
 
+            // time estimate in js
+            const testNums = [1,2,3,4,5,6,7,8,9,10];
+            const testK = 55;
+            const testNumsVector = new Module.vectorInt();
+            testNums.forEach(n => testNumsVector.push_back(n));
+            let timeStart = Date.now();
+            const subsetSum10 = Module.subsetSum(testNumsVector, testK);
+            let timeEnd = Date.now();
+            let timeFor10 = Math.max(1, timeEnd - timeStart);
+            console.log("timeFor10: ", timeFor10);
+            
+
+            let rn = Math.max(1, leftArr.length/10);
+            console.log("rn: ", rn);
+            
+            let rk = Math.max(1, Math.max(...rightArr)/55);
+            console.log("rk: ", rk);
+
+            let jsEstimateOne = timeFor10 * rn * rk;
+            console.log("jsEstimateOne: ", jsEstimateOne);
+
+            let jsEstimate = jsEstimateOne * rightArr.length;
+
             loader.classList.add("hide");
-            estimate.textContent = `Estimated time to run: ${timeResult}`
+            estimate.textContent = `Estimated time to run: ${timeResult}`;
+
+            let jsEstDiv = document.createElement("div");
+            jsEstDiv.textContent = `JS Estimated time: ${jsEstimate/1000}`;
+            estimate.append(jsEstDiv);
+
             cancelBtn.disabled = false;
             submitBtn.disabled = false;
         });

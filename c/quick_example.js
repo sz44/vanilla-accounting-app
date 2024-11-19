@@ -3044,6 +3044,8 @@ function dbg(...args) {
       return Emval.toHandle(v);
     };
 
+  var _emscripten_date_now = () => Date.now();
+
   var getHeapMax = () =>
       HEAPU8.length;
   
@@ -3173,6 +3175,8 @@ var wasmImports = {
   _emval_decref: __emval_decref,
   /** @export */
   _emval_take_value: __emval_take_value,
+  /** @export */
+  emscripten_date_now: _emscripten_date_now,
   /** @export */
   emscripten_resize_heap: _emscripten_resize_heap,
   /** @export */

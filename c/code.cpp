@@ -18,11 +18,11 @@ std::vector<int> intersect(std::vector<int> s1, std::vector<int> s2) {
   return out;
 }
 
-
 EMSCRIPTEN_BINDINGS(my_module) {
     emscripten::function("lerp", &lerp);
     emscripten::function("intersect", &intersect);
     emscripten::function("subsetSum", &subsetSum);
+    emscripten::function("estimateTime", &estimateTime);
 
     emscripten::register_vector<int>("vectorInt");
 }

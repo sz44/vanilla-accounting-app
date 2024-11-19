@@ -139,6 +139,9 @@
 
         #estimate {
             margin-bottom: 2em;
+            display: flex;
+            justify-content: center;
+            text-align: center;
         }
 
         #errorMsg {
@@ -155,6 +158,99 @@
             text-align: center;
             padding: 1em;
         }
+
+        .lds-ellipsis {
+            /* change color here */
+            color: #1c4c5b
+        }
+        .lds-ellipsis,
+        .lds-ellipsis div {
+            box-sizing: border-box;
+        }
+        .lds-ellipsis {
+            display: inline-block;
+            position: relative;
+            width: 80px;
+            height: 80px;
+        }
+        .lds-ellipsis div {
+            position: absolute;
+            top: 33.33333px;
+            width: 13.33333px;
+            height: 13.33333px;
+            border-radius: 50%;
+            background: currentColor;
+            animation-timing-function: cubic-bezier(0, 1, 1, 0);
+        }
+        .lds-ellipsis div:nth-child(1) {
+            left: 8px;
+            animation: lds-ellipsis1 0.6s infinite;
+        }
+        .lds-ellipsis div:nth-child(2) {
+            left: 8px;
+            animation: lds-ellipsis2 0.6s infinite;
+        }
+        .lds-ellipsis div:nth-child(3) {
+            left: 32px;
+            animation: lds-ellipsis2 0.6s infinite;
+        }
+        .lds-ellipsis div:nth-child(4) {
+            left: 56px;
+            animation: lds-ellipsis3 0.6s infinite;
+        }
+        @keyframes lds-ellipsis1 {
+            0% {
+                transform: scale(0);
+            }
+            100% {
+                transform: scale(1);
+            }
+        }
+        @keyframes lds-ellipsis3 {
+            0% {
+                transform: scale(1);
+            }
+            100% {
+                transform: scale(0);
+            }
+        }
+        @keyframes lds-ellipsis2 {
+            0% {
+                transform: translate(0, 0);
+            }
+            100% {
+                transform: translate(24px, 0);
+            }
+        }
+
+        .hide {
+            display: none;
+        }
+
+
+        .loader{
+            display: block;
+            position: relative;
+            height: 20px;
+            width: 140px;
+            background-image: 
+            linear-gradient(#FFF 20px, transparent 0), 
+            linear-gradient(#FFF 20px, transparent 0), 
+            linear-gradient(#FFF 20px, transparent 0), 
+            linear-gradient(#FFF 20px, transparent 0);
+            background-repeat: no-repeat;
+            background-size: 20px auto;
+            background-position: 0 0, 40px 0, 80px 0, 120px 0;
+            animation: pgfill 1s linear infinite;
+        }
+        @keyframes pgfill {
+            0% {   background-image: linear-gradient(#FFF 20px, transparent 0), linear-gradient(#FFF 20px, transparent 0), linear-gradient(#FFF 20px, transparent 0), linear-gradient(#FFF 20px, transparent 0); }
+            25% {   background-image: linear-gradient(#1c4c5b 20px, transparent 0), linear-gradient(#FFF 20px, transparent 0), linear-gradient(#FFF 20px, transparent 0), linear-gradient(#FFF 20px, transparent 0); }
+            50% {   background-image: linear-gradient(#FFF 20px, transparent 0), linear-gradient(#1c4c5b 20px, transparent 0), linear-gradient(#FFF 20px, transparent 0), linear-gradient(#FFF 20px, transparent 0); }
+            75% {   background-image: linear-gradient(#FFF 20px, transparent 0), linear-gradient(#FFF 20px, transparent 0), linear-gradient(#1c4c5b 20px, transparent 0), linear-gradient(#FFF 20px, transparent 0); }
+            100% {   background-image: linear-gradient(#FFF 20px, transparent 0), linear-gradient(#FFF 20px, transparent 0), linear-gradient(#FFF 20px, transparent 0), linear-gradient(#1c4c5b 20px, transparent 0); }
+        }
+    
     </style>
 </head>
 
@@ -197,103 +293,24 @@
     <!-- Confirm Dialog-->
     <dialog id="confirmDialog">
         <div id="estimate">
-            Estimated time: 2 hours
+            <!-- <div class="lds-ellipsis"><div></div><div></div><div></div></div> -->
+            <span class="loader"></span>
         </div>
         <div>
-            <button id="accept">accept</button>
-            <button id="cancel">cancel</button>
+            <button id="accept" disabled>accept</button>
+            <button id="cancel" disabled>cancel</button>
         </div>
     </dialog>
     <!-- Footer -->
     <footer>
         <p>&copy; 2024 Accountant Helper</p>
     </footer>
-    <script>
-        const leftTextBox = document.querySelector("#leftTextBox");
-        const rightTextBox = document.querySelector("#rightTextBox");
-        const submitBtn = document.querySelector("#submit");
-        const acceptBtn = document.querySelector("#accept");
-        const cancelBtn = document.querySelector("#cancel");
-
-        const confirmDialog = document.querySelector("#confirmDialog");
-        const errorMsg = document.querySelector("#errorMsg");
-        
-        submitBtn.addEventListener("click", () => {
-            let leftText = leftTextBox.value.trim();
-            let rightText = rightTextBox.value.trim();
-            let leftValid = true;
-            let rightValid = true;
-
-            // check if textareas empty
-            if (leftText === "") {
-                leftValid = false;
-                leftTextBox.classList.add("error");
-            } 
-            if (rightText === "") {
-                rightValid = false;
-                rightTextBox.classList.add("error");
-            } 
-            // check strings for valid numbers and create int arrays
-            let leftArr = [];
-            let leftStrArr = leftText.split("\n");
-            leftStrArr.forEach(str => {
-                // remove currency symbol is needed
-                if (isNaN(Number.parseFloat(str[0]))) {
-                    str = str.slice(1);
-                }
-                let n = Number.parseFloat(str);
-                if (Number.isNaN(n)) {
-                    leftValid = false;
-                    leftTextBox.classList.add("error");
-                } else {
-                    leftArr.push(n);
-                }
-            });
-            
-            let rightArr = [];
-            let rightStrArr = rightText.split("\n");
-            rightStrArr.forEach(str => {
-                // remove currency symbol is needed
-                if (isNaN(Number.parseFloat(str[0]))) {
-                    str = str.slice(1);
-                }
-                let n = Number.parseFloat(str);
-                if (Number.isNaN(n)) {
-                    rightValid = false;
-                    rightTextBox.classList.add("error");
-                } else {
-                    rightArr.push(n);
-                }
-            });
-
-            if (!leftValid || !rightValid) {
-                errorMsg.innerHTML = "Please check your input";
-                return
-            }
-
-            leftTextBox.classList.remove("error");
-            rightTextBox.classList.remove("error");
-            errorMsg.innerHTML = "";
-
-            console.log(leftArr, rightArr);
-            
-
-            confirmDialog.showModal();
-        });
-
-        acceptBtn.addEventListener("click", () => {
-            // collect numbers (determine which aggragates)
-            // run wasm script with numbers input 
-            // issue: what if not all are aggragates
-        });
-        cancelBtn.addEventListener("click", () => {
-            confirmDialog.close();
-        })
-    </script>
     <script src="c/quick_example.js"></script>
     <script>
-        let cBoth;
+        let WASMReady = false;
+        let inputReady = false;
         Module.onRuntimeInitialized = () => {
+            WASMReady = true;
             let js_nums = [3,-2,5,-8,6,-1];
             let t = 4;
 
@@ -314,6 +331,144 @@
             resultVector.delete();
         } 
     </script>
-    </body>
+    <script>
+        const leftTextBox = document.querySelector("#leftTextBox");
+        const rightTextBox = document.querySelector("#rightTextBox");
+        const submitBtn = document.querySelector("#submit");
+        const acceptBtn = document.querySelector("#accept");
+        const cancelBtn = document.querySelector("#cancel");
 
+        const confirmDialog = document.querySelector("#confirmDialog");
+        const errorMsg = document.querySelector("#errorMsg");
+
+        const estimate = document.querySelector("#estimate");
+        const loader = document.querySelector(".loader");
+
+        let leftArr = [];
+        let rightArr = [];
+        
+        submitBtn.addEventListener("click", async () => {
+            let leftText = leftTextBox.value.trim();
+            let rightText = rightTextBox.value.trim();
+            let leftValid = true;
+            let rightValid = true;
+
+            // check if textareas empty
+            if (leftText === "") {
+                leftValid = false;
+                leftTextBox.classList.add("error");
+            } 
+            if (rightText === "") {
+                rightValid = false;
+                rightTextBox.classList.add("error");
+            } 
+            // check strings for valid numbers and create int arrays
+            let leftStrArr = leftText.split("\n");
+            leftStrArr.forEach(str => {
+                str = str.replace(',','');
+                // remove currency symbol is needed
+                let isNegative = str[0] === "-" ? 1 : 0;
+                if (isNaN(Number.parseFloat(str[isNegative]))) {
+                    // -$1 : $1
+                    str = isNegative ? -1 * str.slice(2) : str.slice(1);
+                }
+                let n = Number.parseFloat(str);
+                if (Number.isNaN(n)) {
+                    leftValid = false;
+                    leftTextBox.classList.add("error");
+                } else {
+                    leftArr.push(n);
+                }
+            });
+            let rightStrArr = rightText.split("\n");
+            rightStrArr.forEach(str => {
+                str = str.replace(',','');
+                // remove currency symbol is needed
+                let isNegative = str[0] === "-" ? 1 : 0;
+                if (isNaN(Number.parseFloat(str[isNegative]))) {
+                    // -$1 : $1
+                    str = isNegative ? -1 * str.slice(2) : str.slice(1);
+                }
+                let n = Number.parseFloat(str);
+                if (Number.isNaN(n)) {
+                    rightValid = false;
+                    rightTextBox.classList.add("error");
+                } else {
+                    rightArr.push(n);
+                }
+            });
+
+            if (!leftValid || !rightValid) {
+                errorMsg.innerHTML = "Please check your input";
+                return
+            }
+
+            leftTextBox.classList.remove("error");
+            rightTextBox.classList.remove("error");
+            errorMsg.innerHTML = "";
+
+            console.log(leftArr, rightArr);
+
+            confirmDialog.showModal();
+
+            await WASMPromise;
+            await testPromise;
+
+            // buttons disabled
+            const numsVector = new Module['vectorInt']();
+            leftArr.forEach(n => numsVector.push_back(n))
+
+            const targetsVector = new Module['vectorInt']();
+            rightArr.forEach(n => targetsVector.push_back(n))
+
+            const timeResult = Module.estimateTime(numsVector, targetsVector);
+            console.log(timeResult);
+
+            loader.classList.add(".hide");
+            estimate.textContent = `Estimated time to run: ${timeResult}`
+            cancelBtn.disabled = false;
+            submitBtn.disabled = false;
+        });
+
+        acceptBtn.addEventListener("click", () => {
+        });
+        cancelBtn.addEventListener("click", () => {
+            confirmDialog.close();
+            loader.classList.remove(".hide");
+        });
+
+        const WASMPromise = new Promise((resolve) => {
+            let interval = setInterval(() => {
+                if (WASMReady) {
+                    clearInterval(interval);
+                    resolve();
+                }
+            }, 50);
+        });
+
+        const testPromise = new Promise((resolve, reject) => {
+            setTimeout(() => {
+                console.log("done");
+                resolve();
+            },3000);
+        });
+
+        const estimatePromise = (numsVector, targetsVector) => {
+            return new Promise((resolve, reject) => {
+                const numsVector = new Module['vectorInt']();
+                leftArr.forEach(n => numsVector.push_back(n))
+
+                const targetsVector = new Module['vectorInt']();
+                rightArr.forEach(n => targetsVector.push_back(n))
+
+                const timeResult = Module.estimateTime(numsVector, targetsVector);
+                console.log(timeResult);
+
+                resolve(timeResult);
+            });
+        }
+
+        // in confirmDialog, if !ready or !estimate render spinner else 
+    </script>
+    </body>
 </html>

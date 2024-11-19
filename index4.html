@@ -441,25 +441,18 @@
             const subsetSum10 = Module.subsetSum(testNumsVector, testK);
             let timeEnd = Date.now();
             let timeFor10 = Math.max(1, timeEnd - timeStart);
-            console.log("timeFor10: ", timeFor10);
-            
 
             let rn = Math.max(1, leftArr.length/10);
-            console.log("rn: ", rn);
-            
             let rk = Math.max(1, Math.max(...rightArr)/55);
-            console.log("rk: ", rk);
-
             let jsEstimateOne = timeFor10 * rn * rk;
-            console.log("jsEstimateOne: ", jsEstimateOne);
-
-            let jsEstimate = jsEstimateOne * rightArr.length;
+            let jsEstimate = jsEstimateOne * rightArr.length * 0.001;
+            jsEstimate = jsEstimate.toFixed(4);
 
             loader.classList.add("hide");
-            estimate.textContent = `Estimated time to run: ${timeResult}`;
+            // estimate.textContent = `Estimated time to run: ${timeResult}`;
 
             let jsEstDiv = document.createElement("div");
-            jsEstDiv.textContent = `JS Estimated time: ${jsEstimate/1000}`;
+            jsEstDiv.textContent = `Estimated time: ${jsEstimate} seconds`;
             estimate.append(jsEstDiv);
 
             cancelBtn.disabled = false;

@@ -90,9 +90,12 @@ double estimateTime(const vector<int> &nums, const vector<int> &targets) {
 }
 
 int main() {
-    vector<int> nums = {3, -2, 5, -8, 6, -1};
-    vector<int> targets = {3, -2, 5, -8, 6, -1};
+    // vector<int> nums = {3, -2, 5, -8, 6, -1};
+    // vector<int> targets = {3, -2, 5, -8, 6, -1};
     // vector<int> nums = {6, -2, 1};
+    vector<int> nums = {1,1,1,1,1};
+    vector<int> targets = {1,1,1,1,1};
+
     int target = 7;
     cout << estimateTime(nums, targets) << endl;
 }

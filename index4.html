@@ -133,15 +133,17 @@
             background-color: #3a983e;
         }
 
-        dialog { margin: auto;
+        dialog { 
+            margin: auto;
             padding: 2em;
+            text-align: center;
         }
 
         #estimate {
             margin-bottom: 2em;
             display: flex;
             justify-content: center;
-            text-align: center;
+            align-items: center;
         }
 
         #errorMsg {
@@ -224,12 +226,11 @@
         }
 
         .hide {
-            display: none;
+           display: none !important;
         }
 
-
         .loader{
-            display: block;
+            display: inline-block;
             position: relative;
             height: 20px;
             width: 140px;
@@ -292,15 +293,23 @@
 
     <!-- Confirm Dialog-->
     <dialog id="confirmDialog">
+        <!-- <div class="lds-ellipsis"><div></div><div></div><div></div></div> -->
+        <div class="loader"></div>
         <div id="estimate">
-            <!-- <div class="lds-ellipsis"><div></div><div></div><div></div></div> -->
-            <span class="loader"></span>
         </div>
         <div>
             <button id="accept" disabled>accept</button>
             <button id="cancel" disabled>cancel</button>
         </div>
     </dialog>
+    <div style="text-align: center;">
+        <div class="loader"></div>
+        <!-- <div class="lds-ellipsis">
+            <div></div>
+            <div></div>
+            <div></div>
+        </div> -->
+    </div>
     <!-- Footer -->
     <footer>
         <p>&copy; 2024 Accountant Helper</p>
@@ -308,7 +317,6 @@
     <script src="c/quick_example.js"></script>
     <script>
         let WASMReady = false;
-        let inputReady = false;
         Module.onRuntimeInitialized = () => {
             WASMReady = true;
             let js_nums = [3,-2,5,-8,6,-1];
@@ -343,11 +351,14 @@
 
         const estimate = document.querySelector("#estimate");
         const loader = document.querySelector(".loader");
+        // const loader = document.querySelector(".lds-ellipsis");
+
 
         let leftArr = [];
         let rightArr = [];
         
         submitBtn.addEventListener("click", async () => {
+            estimate.textContent = "";
             let leftText = leftTextBox.value.trim();
             let rightText = rightTextBox.value.trim();
             let leftValid = true;
@@ -412,7 +423,8 @@
             confirmDialog.showModal();
 
             await WASMPromise;
-            await testPromise;
+
+            await wait(600);
 
             // buttons disabled
             const numsVector = new Module['vectorInt']();
@@ -424,7 +436,7 @@
             const timeResult = Module.estimateTime(numsVector, targetsVector);
             console.log(timeResult);
 
-            loader.classList.add(".hide");
+            loader.classList.add("hide");
             estimate.textContent = `Estimated time to run: ${timeResult}`
             cancelBtn.disabled = false;
             submitBtn.disabled = false;
@@ -434,7 +446,7 @@
         });
         cancelBtn.addEventListener("click", () => {
             confirmDialog.close();
-            loader.classList.remove(".hide");
+            loader.classList.remove("hide");
         });
 
         const WASMPromise = new Promise((resolve) => {
@@ -446,12 +458,14 @@
             }, 50);
         });
 
-        const testPromise = new Promise((resolve, reject) => {
-            setTimeout(() => {
-                console.log("done");
-                resolve();
-            },3000);
-        });
+        const wait = (t) => {
+            return new Promise((resolve, reject) => {
+                setTimeout(() => {
+                    console.log("test promise done");
+                    resolve();
+                }, t);
+            });
+        };
 
         const estimatePromise = (numsVector, targetsVector) => {
             return new Promise((resolve, reject) => {

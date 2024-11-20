@@ -64,6 +64,7 @@ vector<int> subsetSum(const vector<int>& nums, int target) {
     return result;
 }
 
+// TODO: better time estimate accounting for proper range from algorithm
 double estimateTimeOne(const vector<int>& nums, const int k) {
     vector<int> nums1 = {1, 2, 3, 4, 5, 6, 7, 8, 9, 10};
     int k1 = 55;
@@ -91,33 +92,33 @@ double estimateTime(const vector<int> &nums, const vector<int> &targets) {
     return e * targets.size();
 }
 
+// int main() {
+//     // vector<int> nums = {3, -2, 5, -8, 6, -1};
+//     // vector<int> targets = {3, -2, 5, -8, 6, -1};
+//     // vector<int> nums = {6, -2, 1};
+//     vector<int> nums = {1,2,3,4,4};
+//     vector<int> targets = {8};
+
+//     int target = 8;
+//     cout << estimateTime(nums, targets) << endl;
+// }
+
 int main() {
     // vector<int> nums = {3, -2, 5, -8, 6, -1};
-    // vector<int> targets = {3, -2, 5, -8, 6, -1};
-    // vector<int> nums = {6, -2, 1};
-    vector<int> nums = {1,1,1,1,1};
-    vector<int> targets = {1,1,1,1,1};
+    vector<int> nums = {4, 2, 3, 4, 1};
+    int target = 8;
 
-    int target = 7;
-    cout << estimateTime(nums, targets) << endl;
+    vector<int> result = subsetSum(nums, target);
+
+    if (!result.empty()) {
+        cout << "Subset with sum " << target << " is: ";
+        for (int num : result) {
+            cout << num << " ";
+        }
+        cout << endl;
+    } else {
+        cout << "No subset with sum " << target << " exists." << endl;
+    }
+
+    return 0;
 }
-
-// int main() {
-//     vector<int> nums = {3, -2, 5, -8, 6, -1};
-//     // vector<int> nums = {6, -2, 1};
-//     int target = 7;
-
-//     vector<int> result = subsetSum(nums, target);
-
-//     if (!result.empty()) {
-//         cout << "Subset with sum " << target << " is: ";
-//         for (int num : result) {
-//             cout << num << " ";
-//         }
-//         cout << endl;
-//     } else {
-//         cout << "No subset with sum " << target << " exists." << endl;
-//     }
-
-//     return 0;
-// }

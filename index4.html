@@ -252,7 +252,18 @@
             75% {   background-image: linear-gradient(#FFF 20px, transparent 0), linear-gradient(#FFF 20px, transparent 0), linear-gradient(#1c4c5b 20px, transparent 0), linear-gradient(#FFF 20px, transparent 0); }
             100% {   background-image: linear-gradient(#FFF 20px, transparent 0), linear-gradient(#FFF 20px, transparent 0), linear-gradient(#FFF 20px, transparent 0), linear-gradient(#1c4c5b 20px, transparent 0); }
         }
-    
+        table {
+            border-collapse: collapse;
+        }
+        table td,th{
+            /*border: 1px solid black;*/
+            padding: 8px 10px;
+        }
+        #results {
+            margin: 0 0 1rem 0;
+            display: flex;
+            justify-content: center;
+        }
     </style>
 </head>
 
@@ -296,13 +307,31 @@
     <dialog id="confirmDialog">
         <!-- <div class="lds-ellipsis"><div></div><div></div><div></div></div> -->
         <div class="loader"></div>
-        <div id="estimate">
+        <div id="estimate"></div>
+        <div id="results" class="hide">
+            <table>
+                <thead>
+                    <tr>
+                        <th>nums</th>
+                        <th>sums</th>
+                    </tr>
+                </thead>
+                <tbody id="rows">
+                    <tr>
+                        <td>[1,2,3,4,5,6]</td>
+                        <td>7</td>
+                    </tr>
+                </tbody>
+            </table>
         </div>
         <div>
             <button id="accept" disabled>accept</button>
-            <button id="cancel" disabled>cancel</button>
+            <button id="close" disabled>close</button>
         </div>
     </dialog>
+    <template>
+
+    </template>
     <!-- Footer -->
     <footer>
         <p>&copy; 2024 Accountant Helper</p>
@@ -337,7 +366,7 @@
         const rightTextBox = document.querySelector("#rightTextBox");
         const submitBtn = document.querySelector("#submit");
         const acceptBtn = document.querySelector("#accept");
-        const cancelBtn = document.querySelector("#cancel");
+        const closeBtn = document.querySelector("#close");
 
         const confirmDialog = document.querySelector("#confirmDialog");
         const errorMsg = document.querySelector("#errorMsg");
@@ -346,15 +375,16 @@
         const loader = document.querySelector(".loader");
         // const loader = document.querySelector(".lds-ellipsis");
 
+        const resultsDiv = document.querySelector("#results");
+        const rows = document.querySelector("#rows");
+
+
         let leftArr = [];
         let rightArr = [];
-        
-        submitBtn.addEventListener("click", async () => {
-            // reset
-            estimate.textContent = "";
-            leftArr = [];
-            rightArr = [];
+        let numsVector;
+        let targetsVector;
 
+        submitBtn.addEventListener("click", async () => {
             let leftText = leftTextBox.value.trim();
             let rightText = rightTextBox.value.trim();
             let leftValid = true;
@@ -390,7 +420,7 @@
             let rightStrArr = rightText.split("\n");
             rightStrArr.forEach(str => {
                 str = str.replace(',','');
-                // remove currency symbol is needed
+                // remove currency symbol if needed
                 let isNegative = str[0] === "-" ? 1 : 0;
                 if (isNaN(Number.parseFloat(str[isNegative]))) {
                     // -$1 : $1
@@ -407,7 +437,7 @@
 
             if (!leftValid || !rightValid) {
                 errorMsg.innerHTML = "Please check your input";
-                return
+                return;
             }
 
             leftTextBox.classList.remove("error");
@@ -420,17 +450,16 @@
 
             await WASMPromise;
 
-            await wait(600);
+            await wait(500);
 
-            // buttons disabled
-            const numsVector = new Module['vectorInt']();
-            leftArr.forEach(n => numsVector.push_back(n))
+            numsVector = new Module['vectorInt']();
+            leftArr.forEach(n => numsVector.push_back(n * 100)); // store as int
 
-            const targetsVector = new Module['vectorInt']();
-            rightArr.forEach(n => targetsVector.push_back(n))
+            targetsVector = new Module['vectorInt']();
+            rightArr.forEach(n => targetsVector.push_back(n * 100)); // store as int
 
             const timeResult = Module.estimateTime(numsVector, targetsVector);
-            console.log(timeResult);
+            // console.log(timeResult);
 
             // time estimate in js
             const testNums = [1,2,3,4,5,6,7,8,9,10];
@@ -451,19 +480,72 @@
             loader.classList.add("hide");
             // estimate.textContent = `Estimated time to run: ${timeResult}`;
 
-            let jsEstDiv = document.createElement("div");
-            jsEstDiv.textContent = `Estimated time: ${jsEstimate} seconds`;
-            estimate.append(jsEstDiv);
+            // let jsEstDiv = document.createElement("div");
+            // jsEstDiv.textContent = `Estimated time: ${jsEstimate} seconds`;
+            // estimate.append(jsEstDiv);
+            estimate.textContent = `Estimated time: ${jsEstimate} seconds`;
 
-            cancelBtn.disabled = false;
-            submitBtn.disabled = false;
+            closeBtn.disabled = false;
+            acceptBtn.disabled = false;
         });
 
+        let results = new Map();
         acceptBtn.addEventListener("click", () => {
+            // clear estimate text
+            estimate.textContent = "";
+            estimate.classList.add("hide");
+            // show spinner
+            loader.classList.remove("hide");
+
+            acceptBtn.disabled = true;
+
+            let resultVector = new Module.vectorInt(); 
+            let getResult = Module.subsetSum(numsVector, targetsVector.get(0));
+            let res = [];
+            for (let i = 0; i < getResult.size(); i++) {
+                res.push(getResult.get(i) * 0.01);
+            }
+            console.log(res);
+            results.set(rightArr[0], res);
+            // const resultsDiv = document.createElement("div");
+            // resultsDiv.innerHTML=`<span>${rightArr[0]}</span><span>${res}</span>`;
+            // estimate.append(resultsDiv);
+
+            // hide spinner
+            loader.classList.add("hide");
+
+            resultsDiv.classList.remove("hide");
+
+            let newRow = document.createElement("tr");
+            let numsTD = document.createElement("td");
+            let targetTD = document.createElement("td");
+            numsTD.textContent = res;
+            targetTD.textContent = rightArr[0];
+            newRow.append(numsTD, targetTD);
+            rows.append(newRow);
         });
-        cancelBtn.addEventListener("click", () => {
+
+        closeBtn.addEventListener("click", () => {
             confirmDialog.close();
             loader.classList.remove("hide");
+            // clean up memory here (change to close button?)
+            // reset
+            estimate.textContent = "";
+            leftArr = [];
+            rightArr = [];
+            closeBtn.disabled = true;
+            acceptBtn.disabled = true;
+            // TODO: proper memory delete
+            if (WASMReady) {
+                if (numsVector) {
+                    numsVector.delete();
+                    numsVector = undefined;
+                }
+                if (targetsVector) {
+                    targetsVector.delete();
+                    targetsVector = undefined;
+                }
+            } 
         });
 
         const WASMPromise = new Promise((resolve) => {
@@ -478,28 +560,10 @@
         const wait = (t) => {
             return new Promise((resolve, reject) => {
                 setTimeout(() => {
-                    console.log("test promise done");
                     resolve();
                 }, t);
             });
         };
-
-        const estimatePromise = (numsVector, targetsVector) => {
-            return new Promise((resolve, reject) => {
-                const numsVector = new Module['vectorInt']();
-                leftArr.forEach(n => numsVector.push_back(n))
-
-                const targetsVector = new Module['vectorInt']();
-                rightArr.forEach(n => targetsVector.push_back(n))
-
-                const timeResult = Module.estimateTime(numsVector, targetsVector);
-                console.log(timeResult);
-
-                resolve(timeResult);
-            });
-        }
-
-        // in confirmDialog, if !ready or !estimate render spinner else 
     </script>
     </body>
 </html>

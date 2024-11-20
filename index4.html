@@ -499,42 +499,53 @@
 
             acceptBtn.disabled = true;
 
-            let resultVector = new Module.vectorInt(); 
-            let getResult = Module.subsetSum(numsVector, targetsVector.get(0));
-            let res = [];
-            for (let i = 0; i < getResult.size(); i++) {
-                res.push(getResult.get(i) * 0.01);
-            }
-            console.log(res);
-            results.set(rightArr[0], res);
+            rightArr.forEach((t,i) => {
+                let getResult = Module.subsetSum(numsVector, targetsVector.get(i));
+                let res = [];
+                for (let i = 0; i < getResult.size(); i++) {
+                    res.push(getResult.get(i) * 0.01);
+                }
+                console.log(res);
+                results.set(t, res);
+            });
+
+
             // const resultsDiv = document.createElement("div");
             // resultsDiv.innerHTML=`<span>${rightArr[0]}</span><span>${res}</span>`;
             // estimate.append(resultsDiv);
 
             // hide spinner
             loader.classList.add("hide");
-
             resultsDiv.classList.remove("hide");
 
-            let newRow = document.createElement("tr");
-            let numsTD = document.createElement("td");
-            let targetTD = document.createElement("td");
-            numsTD.textContent = res;
-            targetTD.textContent = rightArr[0];
-            newRow.append(numsTD, targetTD);
-            rows.append(newRow);
+            for (const [num, target] of results) {
+                let newRow = document.createElement("tr");
+                let numsTD = document.createElement("td");
+                let targetTD = document.createElement("td");
+                numsTD.textContent = num;
+                targetTD.textContent = target;
+                newRow.append(targetTD,numsTD);
+                rows.append(newRow);
+            }
+
         });
 
         closeBtn.addEventListener("click", () => {
             confirmDialog.close();
             loader.classList.remove("hide");
-            // clean up memory here (change to close button?)
             // reset
             estimate.textContent = "";
+            estimate.classList.remove("hide");
             leftArr = [];
             rightArr = [];
             closeBtn.disabled = true;
             acceptBtn.disabled = true;
+            // table clear
+            rows.innerHTML = "";
+            resultsDiv.classList.add("hide");
+
+            results = new Map();
+
             // TODO: proper memory delete
             if (WASMReady) {
                 if (numsVector) {

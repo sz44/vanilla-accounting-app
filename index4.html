@@ -479,10 +479,6 @@
 
             loader.classList.add("hide");
             // estimate.textContent = `Estimated time to run: ${timeResult}`;
-
-            // let jsEstDiv = document.createElement("div");
-            // jsEstDiv.textContent = `Estimated time: ${jsEstimate} seconds`;
-            // estimate.append(jsEstDiv);
             estimate.textContent = `Estimated time: ${jsEstimate} seconds`;
 
             closeBtn.disabled = false;
@@ -507,12 +503,8 @@
                 }
                 console.log(res);
                 results.set(t, res);
+                getResult.delete();
             });
-
-
-            // const resultsDiv = document.createElement("div");
-            // resultsDiv.innerHTML=`<span>${rightArr[0]}</span><span>${res}</span>`;
-            // estimate.append(resultsDiv);
 
             // hide spinner
             loader.classList.add("hide");

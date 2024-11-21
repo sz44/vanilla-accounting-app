@@ -1,1 +1,1 @@
-emcc -lembind -o quick_example.js code.cpp
+emcc -lembind -o code.js ./c/code.cpp

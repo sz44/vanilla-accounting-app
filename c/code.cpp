@@ -3,24 +3,18 @@
 #include <algorithm>
 #include <set>
 #include <iostream>
-#include "subsetSums2.cpp"
+#include "subsetSums.cpp"
 #include <emscripten/bind.h>
 
 using namespace emscripten;
-
-float lerp(float a, float b, float t) {
-    return (1 - t) * a + t * b;
-}
 
 std::vector<int> intersect(std::vector<int> s1, std::vector<int> s2) {
   std::vector<int> out;
   set_intersection(s1.begin(),s1.end(),s2.begin(),s2.end(), std::back_inserter(out));
   return out;
 }
-EMSCRIPTEN_BINDINGS(my_module) {
-    emscripten::function("lerp", &lerp);
-    emscripten::function("intersect", &intersect);
 
+EMSCRIPTEN_BINDINGS(my_module) {
     emscripten::function("subsetSums", &subsetSums);
     emscripten::function("estimateTime", &estimateTime);
 

@@ -602,7 +602,7 @@ function createExportWrapper(name, nargs) {
 // include: runtime_exceptions.js
 // end include: runtime_exceptions.js
 function findWasmBinary() {
-    var f = 'quick_example.wasm';
+    var f = 'code.wasm';
     if (!isDataURI(f)) {
       return locateFile(f);
     }

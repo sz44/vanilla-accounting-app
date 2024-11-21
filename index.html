@@ -1,104 +1,543 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Document</title>
+    <title>Number Input Web App</title>
     <style>
+        :root {
+            --green: #293830;
+        }
         * {
             margin: 0;
             padding: 0;
             box-sizing: border-box;
         }
-        body {
-            margin: 0;
-            height: 100vh;
 
+        body,
+        html {
+            height: 100%;
+            font-family: Arial, sans-serif;
+            display: flex;
+            flex-direction: column;
         }
-        dialog {
-           margin: auto; 
-           padding: 1rem;
+
+        /* Top Navigation */
+        nav {
+            /* background-color: #333; */
+            background-color: var(--green);
+            color: #fff;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 1em 2em;
         }
-        header {
-            /* max-width: 60%; */
+
+        .nav-left,
+        .nav-center {
+            display: flex;
+            align-items: center;
+        }
+
+        .nav-left a {
+            color: #fff;
+            text-decoration: none;
+            font-size: 1.2em;
+            font-weight: bold;
+        }
+
+        .nav-center a {
+            color: #fff;
+            text-decoration: none;
+            margin: 0 0.5em;
+            font-size: 1em;
+            transition: color 0.3s ease;
+        }
+
+        .nav-center a:hover {
+            color: #ccc;
+        }
+
+        /* Main Section */
+        main {
+            flex: 1;
             display: flex;
             justify-content: center;
-            /* text-align: center;  */
+            /* align-items: center; */
+            padding: 2em;
         }
-        nav {
-            display: flex;
-            justify-content: space-between;
+
+        .container {
+            text-align: center;
+            width: 100%;
+            max-width: 600px;
         }
-        #main-nav {
+
+        #big-text {
+            margin: 2em 0;
+        }
+
+        .instructions {
+            text-align: left;
+            margin-bottom: 1em;
+            font-size: 1em;
+        }
+
+        .input-section {
             display: flex;
+            gap: 1em;
+            justify-content: center;
+        }
+
+        .input-section textarea {
+            border: 2px solid green;
+        }
+
+        .input-section .error {
+            border: 2px solid red;
+        }
+
+        .labels {
+            display: flex;
+            gap: 1em;
+            justify-content: center;
+        }
+
+        .box {
+            width: 117px;
+        }
+
+        textarea {
+            padding: 1em;
+            font-size: 1em;
+            resize: vertical;
+            min-height: 150px;
+            border: 1px solid #ccc;
+            border-radius: 4px;
+        }
+
+        button {
+            background-color: var(--green);
+            color: #fff;
+            padding: 0.7em 1.5em;
+            font-size: 1em;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            transition: background-color 0.3s ease;
+        }
+
+        button:hover {
+            /* background-color: #555; */
+            background-color: #3a983e;
+        }
+
+        dialog { 
+            margin: auto;
+            padding: 2em;
+            text-align: center;
+        }
+
+        #estimate {
+            margin-bottom: 2em;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+        }
+
+        #errorMsg {
+            display: grid;
+            place-items: center;
+            min-height: 1.2rem;
+            margin: 0.5rem 0;
+        }
+
+        /* Footer */
+        footer {
+            background-color: var(--green);
+            color: #fff;
+            text-align: center;
+            padding: 1em;
+        }
+
+        .lds-ellipsis {
+            /* change color here */
+            color: #1c4c5b
+        }
+        .lds-ellipsis,
+        .lds-ellipsis div {
+            box-sizing: border-box;
+        }
+        .lds-ellipsis {
+            display: inline-block;
+            position: relative;
+            width: 80px;
+            height: 80px;
+        }
+        .lds-ellipsis div {
+            position: absolute;
+            top: 33.33333px;
+            width: 13.33333px;
+            height: 13.33333px;
+            border-radius: 50%;
+            background: currentColor;
+            animation-timing-function: cubic-bezier(0, 1, 1, 0);
+        }
+        .lds-ellipsis div:nth-child(1) {
+            left: 8px;
+            animation: lds-ellipsis1 0.6s infinite;
+        }
+        .lds-ellipsis div:nth-child(2) {
+            left: 8px;
+            animation: lds-ellipsis2 0.6s infinite;
+        }
+        .lds-ellipsis div:nth-child(3) {
+            left: 32px;
+            animation: lds-ellipsis2 0.6s infinite;
+        }
+        .lds-ellipsis div:nth-child(4) {
+            left: 56px;
+            animation: lds-ellipsis3 0.6s infinite;
+        }
+        @keyframes lds-ellipsis1 {
+            0% {
+                transform: scale(0);
+            }
+            100% {
+                transform: scale(1);
+            }
+        }
+        @keyframes lds-ellipsis3 {
+            0% {
+                transform: scale(1);
+            }
+            100% {
+                transform: scale(0);
+            }
+        }
+        @keyframes lds-ellipsis2 {
+            0% {
+                transform: translate(0, 0);
+            }
+            100% {
+                transform: translate(24px, 0);
+            }
+        }
+
+        .hide {
+           display: none !important;
+        }
+
+        .loader{
+            display: inline-block;
+            position: relative;
+            height: 20px;
+            width: 140px;
+            background-image: 
+            linear-gradient(#FFF 20px, transparent 0), 
+            linear-gradient(#FFF 20px, transparent 0), 
+            linear-gradient(#FFF 20px, transparent 0), 
+            linear-gradient(#FFF 20px, transparent 0);
+            background-repeat: no-repeat;
+            background-size: 20px auto;
+            background-position: 0 0, 40px 0, 80px 0, 120px 0;
+            animation: pgfill 1s linear infinite;
+        }
+        @keyframes pgfill {
+            0% {   background-image: linear-gradient(#FFF 20px, transparent 0), linear-gradient(#FFF 20px, transparent 0), linear-gradient(#FFF 20px, transparent 0), linear-gradient(#FFF 20px, transparent 0); }
+            25% {   background-image: linear-gradient(#1c4c5b 20px, transparent 0), linear-gradient(#FFF 20px, transparent 0), linear-gradient(#FFF 20px, transparent 0), linear-gradient(#FFF 20px, transparent 0); }
+            50% {   background-image: linear-gradient(#FFF 20px, transparent 0), linear-gradient(#1c4c5b 20px, transparent 0), linear-gradient(#FFF 20px, transparent 0), linear-gradient(#FFF 20px, transparent 0); }
+            75% {   background-image: linear-gradient(#FFF 20px, transparent 0), linear-gradient(#FFF 20px, transparent 0), linear-gradient(#1c4c5b 20px, transparent 0), linear-gradient(#FFF 20px, transparent 0); }
+            100% {   background-image: linear-gradient(#FFF 20px, transparent 0), linear-gradient(#FFF 20px, transparent 0), linear-gradient(#FFF 20px, transparent 0), linear-gradient(#1c4c5b 20px, transparent 0); }
+        }
+        table {
+            border-collapse: collapse;
         }
         table td,th{
-            border: 1px solid black;
+            /*border: 1px solid black;*/
             padding: 8px 10px;
+        }
+        #results {
+            margin: 0 0 1rem 0;
+            display: flex;
+            justify-content: center;
         }
     </style>
 </head>
+
 <body>
-    <div style="display:flex; justify-content: space-between; max-width:60%;">
-        <div>a</div>
-        <div>b</div>
-    </div>
 
-    <!-- <div id="results" style="display: flex; justify-content: center;"> -->
-        <table>
-            <thead>
-                <tr>
-                    <th>nums</th>
-                    <th>sums</th>
-                </tr>
-            </thead>
-            <tbody>
-                <tr>
-                    <td>[1,2,3,4,5,6]</td>
-                    <td>7</td>
-                </tr>
-            </tbody>
-        </table>
-    <!-- </div> -->
-
-    <header>
-        <nav>
-            <div>Reconcilliation App</div>
-            <div id="main-nav">
-                <div>a</div>
-                <div>b</div>
-            </div>
-        </nav>
-    </header>
-    <section>
-        <p>Enter numbers here:</p>
-        <div>
-            <textarea name="" id="" cols="10" rows="10"></textarea> 
-            <textarea name="" id="" cols="10" rows="10"></textarea> 
+    <!-- Top Navigation -->
+    <nav>
+        <div class="nav-left">
+            <a href="#">Home</a>
         </div>
-        <button id="compute">Compute</button>
-    </section>
-    <dialog close>
-        <p>Time to compute: </p>
-        <button id="confirm">Confirm</button>
-        <button id="cancel">Cancel</button>
+        <div class="nav-center">
+            <a href="#">FAQ</a>
+            <a href="#">help</a>
+            <a href="#">Pricing</a>
+            <a href="#">About</a>
+        </div>
+    </nav>
+
+    <!-- Main Section -->
+    <main>
+        <div class="container">
+            <h1 id="big-text">Reconcilliation Helper</h1>
+            <div class="instructions">
+                <p>Instructions: Enter numbers in the boxes below. One number per row.
+                    Left column should hold individual numbers and right column aggragated sums.
+                    (currency symbol is optional).</p>
+            </div>
+            <div class="labels">
+                <div class="box">Individual</div>
+                <div class="box">Aggragates</div>
+            </div>
+            <div class="input-section">
+                <textarea id="leftTextBox" cols="10" rows="20" placeholder="Enter numbers here..." required></textarea>
+                <textarea id="rightTextBox" cols="10" placeholder="Enter numbers here..." required></textarea>
+            </div>
+            <p id="errorMsg"></p>
+            <button type="submit" id="submit">Submit</button>
+        </div>
+    </main>
+
+    <!-- Confirm Dialog-->
+    <dialog id="confirmDialog">
+        <!-- <div class="lds-ellipsis"><div></div><div></div><div></div></div> -->
+        <div class="loader"></div>
+        <div id="estimate"></div>
+        <div id="results" class="hide">
+            <table>
+                <thead>
+                    <tr>
+                        <th>numbers</th>
+                        <th>sums</th>
+                    </tr>
+                </thead>
+                <tbody id="rows">
+                </tbody>
+            </table>
+        </div>
+        <div>
+            <button id="accept" disabled>accept</button>
+            <button id="close" disabled>close</button>
+        </div>
     </dialog>
-    <script src="script.js"></script>
+    <template>
+
+    </template>
+    <!-- Footer -->
+    <footer>
+        <p>&copy; 2024 Accountant Helper</p>
+    </footer>
+    <script src="code.js"></script>
     <script>
-        const dialog = document.querySelector("dialog")
-        const computeBtn = document.querySelector("#compute")
-        const confirmBtn = document.querySelector("#confirm") 
-        const cancelBtn = document.querySelector("#cancel") 
-
-        computeBtn.addEventListener("click", () => {
-            dialog.showModal()
-        })
-        confirmBtn.addEventListener("click", () => {
-
-        })
-        cancelBtn.addEventListener("click", () => {
-            dialog.close()
-        })
+        let WASMReady = false;
+        Module.onRuntimeInitialized = () => {
+            WASMReady = true;
+        } 
     </script>
-</body>
+    <script>
+        const leftTextBox = document.querySelector("#leftTextBox");
+        const rightTextBox = document.querySelector("#rightTextBox");
+        const submitBtn = document.querySelector("#submit");
+        const acceptBtn = document.querySelector("#accept");
+        const closeBtn = document.querySelector("#close");
+
+        const confirmDialog = document.querySelector("#confirmDialog");
+        const errorMsg = document.querySelector("#errorMsg");
+
+        const estimate = document.querySelector("#estimate");
+        const loader = document.querySelector(".loader");
+        // const loader = document.querySelector(".lds-ellipsis");
+
+        const resultsDiv = document.querySelector("#results");
+        const rows = document.querySelector("#rows");
+
+        let leftArr = [];
+        let rightArr = [];
+        let numsVector;
+        let targetsVector;
+
+        submitBtn.addEventListener("click", async () => {
+            let leftText = leftTextBox.value.trim();
+            let rightText = rightTextBox.value.trim();
+            let leftValid = true;
+            let rightValid = true;
+
+            // check if textareas empty
+            if (leftText === "") {
+                leftValid = false;
+                leftTextBox.classList.add("error");
+            } 
+            if (rightText === "") {
+                rightValid = false;
+                rightTextBox.classList.add("error");
+            } 
+            // check strings for valid numbers and create int arrays
+            let leftStrArr = leftText.split("\n");
+            leftStrArr.forEach(str => {
+                str = str.replace(',','');
+                // remove currency symbol is needed
+                let isNegative = str[0] === "-" ? 1 : 0;
+                if (isNaN(Number.parseFloat(str[isNegative]))) {
+                    // -$1 : $1
+                    str = isNegative ? -1 * str.slice(2) : str.slice(1);
+                }
+                let n = Number.parseFloat(str);
+                if (Number.isNaN(n)) {
+                    leftValid = false;
+                    leftTextBox.classList.add("error");
+                } else {
+                    leftArr.push(n);
+                }
+            });
+            let rightStrArr = rightText.split("\n");
+            rightStrArr.forEach(str => {
+                str = str.replace(',','');
+                // remove currency symbol if needed
+                let isNegative = str[0] === "-" ? 1 : 0;
+                if (isNaN(Number.parseFloat(str[isNegative]))) {
+                    // -$1 : $1
+                    str = isNegative ? -1 * str.slice(2) : str.slice(1);
+                }
+                let n = Number.parseFloat(str);
+                if (Number.isNaN(n)) {
+                    rightValid = false;
+                    rightTextBox.classList.add("error");
+                } else {
+                    rightArr.push(n);
+                }
+            });
+
+            if (!leftValid || !rightValid) {
+                errorMsg.innerHTML = "Please check your input";
+                return;
+            }
+
+            leftTextBox.classList.remove("error");
+            rightTextBox.classList.remove("error");
+            errorMsg.innerHTML = "";
+
+            console.log(leftArr, rightArr);
+
+            confirmDialog.showModal();
+
+            await WASMPromise;
+
+            await wait(500);
+
+            numsVector = new Module['vectorInt']();
+            leftArr.forEach(n => numsVector.push_back(n * 100)); // store as int
+
+            targetsVector = new Module['vectorInt']();
+            rightArr.forEach(n => targetsVector.push_back(n * 100)); // store as int
+
+            const runTimeEstimate = Module.estimateTime(numsVector);
+            // console.log(timeResult);
+
+            loader.classList.add("hide");
+            // estimate.textContent = `Estimated time to run: ${timeResult}`;
+            estimate.textContent = `Estimated time: ${runTimeEstimate.toFixed(2)} seconds`;
+
+            closeBtn.disabled = false;
+            acceptBtn.disabled = false;
+        });
+
+        let results = new Map();
+        acceptBtn.addEventListener("click", async () => {
+            // clear estimate text
+            estimate.textContent = "Working please wait...";
+            // estimate.classList.add("hide");
+            // show spinner
+            // loader.classList.remove("hide");
+
+            acceptBtn.disabled = true;
+            // give time to do the abouve 2 lines
+            await wait(500);
+
+            // TODO: use webworker to run on separate thread
+            // TODO: handle targets duplicates
+            const getResultMap = Module.subsetSums(numsVector, targetsVector);
+
+            for (let i = 0; i < targetsVector.size(); i++) {
+                const target = targetsVector.get(i);
+                const vector = getResultMap.get(target);
+
+                const jsArr = [];
+                for (let j=0; j<vector.size(); j++) {
+                    let n = vector.get(j);
+                    jsArr.push(n * 0.01);
+                }
+                results.set(target * 0.01, jsArr);
+            }
+
+            // hide spinner
+            // loader.classList.add("hide");
+            resultsDiv.classList.remove("hide");
+            // clear estimate text
+            estimate.textContent = "Working please wait...";
+            estimate.classList.add("hide");
+
+            for (const [num, target] of results) {
+                let newRow = document.createElement("tr");
+                let numsTD = document.createElement("td");
+                let targetTD = document.createElement("td");
+                numsTD.textContent = num;
+                targetTD.textContent = target;
+                newRow.append(targetTD,numsTD);
+                rows.append(newRow);
+            }
+        });
+
+        closeBtn.addEventListener("click", () => {
+            confirmDialog.close();
+            loader.classList.remove("hide");
+            // reset
+            estimate.textContent = "";
+            estimate.classList.remove("hide");
+            leftArr = [];
+            rightArr = [];
+            closeBtn.disabled = true;
+            acceptBtn.disabled = true;
+            // table clear
+            rows.innerHTML = "";
+            resultsDiv.classList.add("hide");
+
+            results = new Map();
+
+            // TODO: proper memory delete
+            if (WASMReady) {
+                if (numsVector) {
+                    numsVector.delete();
+                    numsVector = undefined;
+                }
+                if (targetsVector) {
+                    targetsVector.delete();
+                    targetsVector = undefined;
+                }
+            } 
+        });
+
+        const WASMPromise = new Promise((resolve) => {
+            let interval = setInterval(() => {
+                if (WASMReady) {
+                    clearInterval(interval);
+                    resolve();
+                }
+            }, 50);
+        });
+
+        const wait = (t) => {
+            return new Promise((resolve, reject) => {
+                setTimeout(() => {
+                    resolve();
+                }, t);
+            });
+        };
+    </script>
+    </body>
 </html>

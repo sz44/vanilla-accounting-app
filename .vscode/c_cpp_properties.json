@@ -16,6 +16,21 @@
             "cStandard": "c17",
             "cppStandard": "c++17",
             "intelliSenseMode": "windows-msvc-x64"
+        },
+
+        {
+            "name": "Linux",
+            "compilerPath": "/usr/bin/g++",
+            "compilerArgs": [
+            ],
+            "intelliSenseMode": "gcc-x64",
+            "includePath": [
+                "/usr/include",
+                "/home/semi/code/emsdk/upstream/emscripten/system/include/"
+            ],
+            "cStandard": "gnu11",
+            "cppStandard": "gnu++20",
+            "configurationProvider": "ms-vscode.cmake-tools"
         }
     ],
     "version": 4

@@ -36,7 +36,7 @@ vector<int> subsetSum(const vector<int>& nums, int target) {
             // if true can check if with this num curr target is achievable
             } else if(j - num >= 0 && j - num <= range && prev[j - num]) {
                 curr[j] = true;
-                parent[j - shift] = num; // Store the contributing number and index
+                parent[j - shift] = num; // Store the sum and its contributing number 
             }
         }
         prev = curr;

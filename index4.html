@@ -312,7 +312,7 @@
             <table>
                 <thead>
                     <tr>
-                        <th>nums</th>
+                        <th>numbers</th>
                         <th>sums</th>
                     </tr>
                 </thead>
@@ -502,33 +502,25 @@
 
             loader.classList.add("hide");
             // estimate.textContent = `Estimated time to run: ${timeResult}`;
-            estimate.textContent = `Estimated time: ${runTimeEstimate} seconds`;
+            estimate.textContent = `Estimated time: ${runTimeEstimate.toFixed(2)} seconds`;
 
             closeBtn.disabled = false;
             acceptBtn.disabled = false;
         });
 
         let results = new Map();
-        acceptBtn.addEventListener("click", () => {
+        acceptBtn.addEventListener("click", async () => {
             // clear estimate text
-            estimate.textContent = "";
-            estimate.classList.add("hide");
+            estimate.textContent = "Working please wait...";
+            // estimate.classList.add("hide");
             // show spinner
-            loader.classList.remove("hide");
+            // loader.classList.remove("hide");
 
             acceptBtn.disabled = true;
+            // give time to do the abouve 2 lines
+            await wait(500);
 
-            // rightArr.forEach((t,i) => {
-            //     let getResult = Module.subsetSum(numsVector, targetsVector.get(i));
-            //     let res = [];
-            //     for (let i = 0; i < getResult.size(); i++) {
-            //         res.push(getResult.get(i) * 0.01);
-            //     }
-            //     console.log(res);
-            //     results.set(t, res);
-            //     getResult.delete();
-            // });
-
+            // TODO: use webworker to run on separate thread
             // TODO: handle targets duplicates
             const getResultMap = Module.subsetSums(numsVector, targetsVector);
 
@@ -543,11 +535,13 @@
                 }
                 results.set(target * 0.01, jsArr);
             }
-            
 
             // hide spinner
-            loader.classList.add("hide");
+            // loader.classList.add("hide");
             resultsDiv.classList.remove("hide");
+            // clear estimate text
+            estimate.textContent = "Working please wait...";
+            estimate.classList.add("hide");
 
             for (const [num, target] of results) {
                 let newRow = document.createElement("tr");
@@ -558,7 +552,6 @@
                 newRow.append(targetTD,numsTD);
                 rows.append(newRow);
             }
-
         });
 
         closeBtn.addEventListener("click", () => {

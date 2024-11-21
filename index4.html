@@ -337,24 +337,51 @@
         let WASMReady = false;
         Module.onRuntimeInitialized = () => {
             WASMReady = true;
-            let js_nums = [3,-2,5,-8,6,-1];
             let t = 4;
+            // const resultVector = Module.subsetSum(numsVector, t);
+
+            let js_nums = [3,-2,5,-8,6,-1];
+            let js_targets = [4,11];
 
             const numsVector = new Module['vectorInt']();
             js_nums.forEach(n => numsVector.push_back(n))
 
-            const resultVector = Module.subsetSum(numsVector, t);
+            const targetsVector = new Module['vectorInt']();
+            js_targets.forEach(t => targetsVector.push_back(t));
 
-            const result = [];
-            for (let i = 0; i < resultVector.size(); i++) {
-                result.push(resultVector.get(i));
-            }
+            // const keys = resultsMap.keys(); // Iterator for the map keys
+            // for (let i = 0; i < keys.size(); i++) {
+            // }
 
-            console.log(`Subset with sum ${t} is: ${result}`);
+            const resultsMap = Module.subsetSums(numsVector, targetsVector);
+            let vec = resultsMap.get(4);
+            console.log(vec.size());
+            
+            const est = Module.estimateTime(numsVector);
+            console.log(`estimated time: ${est}`);
+
+            const results = new Map();
+            js_targets.forEach(t => {
+                let vec = resultsMap.get(t);
+                let jsArr = []
+                for (let i=0; i<vec.size(); i++) {
+                    jsArr.push(vec.get(i));
+                }
+                results.set(t, jsArr);
+            });
+
+            // for (let i = 0; i < resultsMap.size(); i++) {
+            //     result.push(resultVector.get(i));
+            //     results.set()
+            // }
+            console.log(results);
+            
+            // console.log(`Subset with sum ${t} is: ${result}`);
 
             // Clean up memory
             numsVector.delete();
-            resultVector.delete();
+            targetsVector.delete();
+            resultsMap.delete();
         } 
     </script>
     <script>
@@ -454,28 +481,28 @@
             targetsVector = new Module['vectorInt']();
             rightArr.forEach(n => targetsVector.push_back(n * 100)); // store as int
 
-            const timeResult = Module.estimateTime(numsVector, targetsVector);
+            const runTimeEstimate = Module.estimateTime(numsVector);
             // console.log(timeResult);
 
             // time estimate in js
-            const testNums = [1,2,3,4,5,6,7,8,9,10];
-            const testK = 55;
-            const testNumsVector = new Module.vectorInt();
-            testNums.forEach(n => testNumsVector.push_back(n));
-            let timeStart = Date.now();
-            const subsetSum10 = Module.subsetSum(testNumsVector, testK);
-            let timeEnd = Date.now();
-            let timeFor10 = Math.max(1, timeEnd - timeStart);
+            // const testNums = [1,2,3,4,5,6,7,8,9,10];
+            // const testK = 55;
+            // const testNumsVector = new Module.vectorInt();
+            // testNums.forEach(n => testNumsVector.push_back(n));
+            // let timeStart = Date.now();
+            // const subsetSum10 = Module.subsetSum(testNumsVector, testK);
+            // let timeEnd = Date.now();
+            // let timeFor10 = Math.max(1, timeEnd - timeStart);
 
-            let rn = Math.max(1, leftArr.length/10);
-            let rk = Math.max(1, Math.max(...rightArr)/55);
-            let jsEstimateOne = timeFor10 * rn * rk;
-            let jsEstimate = jsEstimateOne * rightArr.length * 0.001;
-            jsEstimate = jsEstimate.toFixed(4);
+            // let rn = Math.max(1, leftArr.length/10);
+            // let rk = Math.max(1, Math.max(...rightArr)/55);
+            // let jsEstimateOne = timeFor10 * rn * rk;
+            // let jsEstimate = jsEstimateOne * rightArr.length * 0.001;
+            // jsEstimate = jsEstimate.toFixed(4);
 
             loader.classList.add("hide");
             // estimate.textContent = `Estimated time to run: ${timeResult}`;
-            estimate.textContent = `Estimated time: ${jsEstimate} seconds`;
+            estimate.textContent = `Estimated time: ${runTimeEstimate} seconds`;
 
             closeBtn.disabled = false;
             acceptBtn.disabled = false;
@@ -491,16 +518,32 @@
 
             acceptBtn.disabled = true;
 
-            rightArr.forEach((t,i) => {
-                let getResult = Module.subsetSum(numsVector, targetsVector.get(i));
-                let res = [];
-                for (let i = 0; i < getResult.size(); i++) {
-                    res.push(getResult.get(i) * 0.01);
+            // rightArr.forEach((t,i) => {
+            //     let getResult = Module.subsetSum(numsVector, targetsVector.get(i));
+            //     let res = [];
+            //     for (let i = 0; i < getResult.size(); i++) {
+            //         res.push(getResult.get(i) * 0.01);
+            //     }
+            //     console.log(res);
+            //     results.set(t, res);
+            //     getResult.delete();
+            // });
+
+            // TODO: handle targets duplicates
+            const getResultMap = Module.subsetSums(numsVector, targetsVector);
+
+            for (let i = 0; i < targetsVector.size(); i++) {
+                const target = targetsVector.get(i);
+                const vector = getResultMap.get(target);
+
+                const jsArr = [];
+                for (let j=0; j<vector.size(); j++) {
+                    let n = vector.get(j);
+                    jsArr.push(n * 0.01);
                 }
-                console.log(res);
-                results.set(t, res);
-                getResult.delete();
-            });
+                results.set(target * 0.01, jsArr);
+            }
+            
 
             // hide spinner
             loader.classList.add("hide");

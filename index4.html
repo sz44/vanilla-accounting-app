@@ -288,7 +288,8 @@
             <h1 id="big-text">Reconcilliation Helper</h1>
             <div class="instructions">
                 <p>Instructions: Enter numbers in the boxes below. One number per row.
-                    Left column should hold individual numbers and right column aggragated sums.</p>
+                    Left column should hold individual numbers and right column aggragated sums.
+                    (currency symbol is optional).</p>
             </div>
             <div class="labels">
                 <div class="box">Individual</div>
@@ -337,51 +338,6 @@
         let WASMReady = false;
         Module.onRuntimeInitialized = () => {
             WASMReady = true;
-            let t = 4;
-            // const resultVector = Module.subsetSum(numsVector, t);
-
-            let js_nums = [3,-2,5,-8,6,-1];
-            let js_targets = [4,11];
-
-            const numsVector = new Module['vectorInt']();
-            js_nums.forEach(n => numsVector.push_back(n))
-
-            const targetsVector = new Module['vectorInt']();
-            js_targets.forEach(t => targetsVector.push_back(t));
-
-            // const keys = resultsMap.keys(); // Iterator for the map keys
-            // for (let i = 0; i < keys.size(); i++) {
-            // }
-
-            const resultsMap = Module.subsetSums(numsVector, targetsVector);
-            let vec = resultsMap.get(4);
-            console.log(vec.size());
-            
-            const est = Module.estimateTime(numsVector);
-            console.log(`estimated time: ${est}`);
-
-            const results = new Map();
-            js_targets.forEach(t => {
-                let vec = resultsMap.get(t);
-                let jsArr = []
-                for (let i=0; i<vec.size(); i++) {
-                    jsArr.push(vec.get(i));
-                }
-                results.set(t, jsArr);
-            });
-
-            // for (let i = 0; i < resultsMap.size(); i++) {
-            //     result.push(resultVector.get(i));
-            //     results.set()
-            // }
-            console.log(results);
-            
-            // console.log(`Subset with sum ${t} is: ${result}`);
-
-            // Clean up memory
-            numsVector.delete();
-            targetsVector.delete();
-            resultsMap.delete();
         } 
     </script>
     <script>
@@ -400,7 +356,6 @@
 
         const resultsDiv = document.querySelector("#results");
         const rows = document.querySelector("#rows");
-
 
         let leftArr = [];
         let rightArr = [];
@@ -483,22 +438,6 @@
 
             const runTimeEstimate = Module.estimateTime(numsVector);
             // console.log(timeResult);
-
-            // time estimate in js
-            // const testNums = [1,2,3,4,5,6,7,8,9,10];
-            // const testK = 55;
-            // const testNumsVector = new Module.vectorInt();
-            // testNums.forEach(n => testNumsVector.push_back(n));
-            // let timeStart = Date.now();
-            // const subsetSum10 = Module.subsetSum(testNumsVector, testK);
-            // let timeEnd = Date.now();
-            // let timeFor10 = Math.max(1, timeEnd - timeStart);
-
-            // let rn = Math.max(1, leftArr.length/10);
-            // let rk = Math.max(1, Math.max(...rightArr)/55);
-            // let jsEstimateOne = timeFor10 * rn * rk;
-            // let jsEstimate = jsEstimateOne * rightArr.length * 0.001;
-            // jsEstimate = jsEstimate.toFixed(4);
 
             loader.classList.add("hide");
             // estimate.textContent = `Estimated time to run: ${timeResult}`;

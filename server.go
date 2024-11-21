@@ -13,27 +13,28 @@ func LoggingMiddleware(next http.Handler) http.Handler {
 	})
 }
 
-func sayHello(w http.ResponseWriter, r *http.Request) {
-	fmt.Fprintf(w, "heelloooo0000 again!")
+func LoggingMiddleware2(next http.Handler) http.Handler {
+	return Logger{next: next}
 }
 
-type MyHandler struct {
-	f func(http.ResponseWriter, *http.Request)
+type Logger struct {
+	next http.Handler
 }
+
+func (lf Logger) ServeHTTP(w http.ResponseWriter, r *http.Request) {
+	log.Printf("request from hostname: %s url: %s", r.Host, r.URL)
+	lf.next.ServeHTTP(w, r)
+}
+
+type MyHandler struct{}
 
 func (mh *MyHandler) ServeHTTP(w http.ResponseWriter, r *http.Request) {
 	fmt.Fprintf(w, "myhandler")
 }
 
-// field or method???
-// type MySruct struct {
-// 	f func(int) int
-// }
-
-// type MyStruct struct {}
-// func (ms *MyStruct) f(i int) int{
-// 	return i + 10
-// }
+func sayHello(w http.ResponseWriter, r *http.Request) {
+	fmt.Fprintf(w, "heelloooo0000 again!")
+}
 
 func main() {
 	// turn sayHello (func) in to a HandlerFunc which as an object that satisfies the Handler interface
@@ -43,7 +44,10 @@ func main() {
 	// http.Handle("/h/", helloHandler)
 	// LoggingMiddleware takes a Handler and returns a Handler but with added logging
 	logHelloHandler := LoggingMiddleware(helloHandler)
+	logHelloHandler2 := LoggingMiddleware2(helloHandler)
 	http.Handle("/h/", logHelloHandler)
+	http.Handle("/h2/", logHelloHandler2)
+
 	fs := http.FileServer(http.Dir("."))
 	strip := http.StripPrefix("/test/", fs)
 	handler := LoggingMiddleware(strip)

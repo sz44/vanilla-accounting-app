@@ -84,6 +84,10 @@
             font-size: 1em;
         }
 
+        .instructions p span {
+            text-decoration: underline;
+        }
+
         .input-section {
             display: flex;
             gap: 1em;
@@ -152,6 +156,23 @@
             place-items: center;
             min-height: 1.2rem;
             margin: 0.5rem 0;
+        }
+
+        table {
+            border-collapse: collapse;
+        }
+        table td,th{
+            /*border: 1px solid black;*/
+            padding: 8px 10px;
+        }
+        #results {
+            margin: 0 0 1rem 0;
+            display: flex;
+            justify-content: center;
+        }
+
+        .hide {
+           display: none !important;
         }
 
         /* Footer */
@@ -226,10 +247,6 @@
             }
         }
 
-        .hide {
-           display: none !important;
-        }
-
         .loader{
             display: inline-block;
             position: relative;
@@ -251,18 +268,6 @@
             50% {   background-image: linear-gradient(#FFF 20px, transparent 0), linear-gradient(#1c4c5b 20px, transparent 0), linear-gradient(#FFF 20px, transparent 0), linear-gradient(#FFF 20px, transparent 0); }
             75% {   background-image: linear-gradient(#FFF 20px, transparent 0), linear-gradient(#FFF 20px, transparent 0), linear-gradient(#1c4c5b 20px, transparent 0), linear-gradient(#FFF 20px, transparent 0); }
             100% {   background-image: linear-gradient(#FFF 20px, transparent 0), linear-gradient(#FFF 20px, transparent 0), linear-gradient(#FFF 20px, transparent 0), linear-gradient(#1c4c5b 20px, transparent 0); }
-        }
-        table {
-            border-collapse: collapse;
-        }
-        table td,th{
-            /*border: 1px solid black;*/
-            padding: 8px 10px;
-        }
-        #results {
-            margin: 0 0 1rem 0;
-            display: flex;
-            justify-content: center;
         }
     </style>
 </head>
@@ -287,9 +292,9 @@
         <div class="container">
             <h1 id="big-text">Reconcilliation Helper</h1>
             <div class="instructions">
-                <p>Instructions: Enter numbers in the boxes below. One number per row.
+                <p><span>Instructions</span>: Enter numbers in the boxes below. One number per row.
                     Left column should hold individual numbers and right column aggragated sums.
-                    (currency symbol is optional).</p>
+                    Currency symbols are optional.</p>
             </div>
             <div class="labels">
                 <div class="box">Individual</div>
@@ -326,9 +331,6 @@
             <button id="close" disabled>close</button>
         </div>
     </dialog>
-    <template>
-
-    </template>
     <!-- Footer -->
     <footer>
         <p>&copy; 2024 Accountant Helper</p>

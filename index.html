@@ -472,6 +472,8 @@
                 results.set(target * 0.01, jsArr);
             }
 
+            getResultMap.delete();
+
             // hide spinner
             // loader.classList.add("hide");
             resultsDiv.classList.remove("hide");
@@ -479,6 +481,7 @@
             estimate.textContent = "Working please wait...";
             estimate.classList.add("hide");
 
+            // create solution table
             for (const [num, target] of results) {
                 let newRow = document.createElement("tr");
                 let numsTD = document.createElement("td");

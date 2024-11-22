@@ -359,70 +359,67 @@
         const resultsDiv = document.querySelector("#results");
         const rows = document.querySelector("#rows");
 
+        class Program {
+            leftBox;
+            rightBox;
+            numsArr;
+            rightArr;
+            numsVector;
+            targetsVector;
+            constructor(numsText, targetsText) {
+                this.leftBox = numsText;
+                this.rightBox = targetsText;
+            }
+        }
+
+        let program;
+
         let leftArr = [];
         let rightArr = [];
         let numsVector;
         let targetsVector;
 
-        submitBtn.addEventListener("click", async () => {
-            let leftText = leftTextBox.value.trim();
-            let rightText = rightTextBox.value.trim();
-            let leftValid = true;
-            let rightValid = true;
+        function getNumbers(input) {
+            let out = [];
+            
+            let lines = input.trim().split("\n");
 
-            // check if textareas empty
-            if (leftText === "") {
-                leftValid = false;
-                leftTextBox.classList.add("error");
-            } 
-            if (rightText === "") {
-                rightValid = false;
-                rightTextBox.classList.add("error");
-            } 
-            // check strings for valid numbers and create int arrays
-            let leftStrArr = leftText.split("\n");
-            leftStrArr.forEach(str => {
-                str = str.replace(',','');
-                // remove currency symbol is needed
-                let isNegative = str[0] === "-" ? 1 : 0;
-                if (isNaN(Number.parseFloat(str[isNegative]))) {
-                    // -$1 : $1
-                    str = isNegative ? -1 * str.slice(2) : str.slice(1);
-                }
-                let n = Number.parseFloat(str);
+            for (let line of lines) {
+                // clean 
+                const cleanedLine = line.replace(/[,\$]/g,"").trim();
+                // parse
+                const n = Number.parseFloat(cleanedLine);
+                // validate
                 if (Number.isNaN(n)) {
-                    leftValid = false;
-                    leftTextBox.classList.add("error");
-                } else {
-                    leftArr.push(n);
+                    console.warn(`invalid input: ${line}`);
+                    return [];
                 }
-            });
-            let rightStrArr = rightText.split("\n");
-            rightStrArr.forEach(str => {
-                str = str.replace(',','');
-                // remove currency symbol if needed
-                let isNegative = str[0] === "-" ? 1 : 0;
-                if (isNaN(Number.parseFloat(str[isNegative]))) {
-                    // -$1 : $1
-                    str = isNegative ? -1 * str.slice(2) : str.slice(1);
-                }
-                let n = Number.parseFloat(str);
-                if (Number.isNaN(n)) {
-                    rightValid = false;
-                    rightTextBox.classList.add("error");
-                } else {
-                    rightArr.push(n);
-                }
-            });
 
-            if (!leftValid || !rightValid) {
-                errorMsg.innerHTML = "Please check your input";
-                return;
+                out.push(n);
             }
 
+            return out;
+        }
+
+        submitBtn.addEventListener("click", async () => {
             leftTextBox.classList.remove("error");
             rightTextBox.classList.remove("error");
             errorMsg.innerHTML = "";
+
+            leftArr = getNumbers(leftTextBox.value);
+            rightArr = getNumbers(rightTextBox.value);
+            console.log(leftArr, rightArr);
+            
+            if (leftArr.length === 0) {
+                leftTextBox.classList.add("error");
+            }
+            if (rightArr.length === 0) {
+                rightTextBox.classList.add("error");
+            } 
+            if (leftArr.length === 0 || rightArr.length === 0) {
+                errorMsg.innerHTML = "Please check your input";
+                return;
+            }
 
             console.log(leftArr, rightArr);
 
@@ -439,10 +436,8 @@
             rightArr.forEach(n => targetsVector.push_back(n * 100)); // store as int
 
             const runTimeEstimate = Module.estimateTime(numsVector);
-            // console.log(timeResult);
 
             loader.classList.add("hide");
-            // estimate.textContent = `Estimated time to run: ${timeResult}`;
             estimate.textContent = `Estimated time: ${runTimeEstimate.toFixed(2)} seconds`;
 
             closeBtn.disabled = false;

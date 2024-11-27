@@ -54,18 +54,22 @@ function subsetSums(contMap, targets) {
 
 
 function estimate(nums) {
-  let size = nums.length;
-  let maxSum
-  let range = ;
   let testNums = getNums(100, 100)
   let start = Date.now();
   getMap(testNums);
   let end = Date.now();
   let elapsed = end - start;
-  let s = elapsed * 0.001;
+  let testSecs = elapsed * 0.001;
   // size * 100 ns
   // range ** 10 ns
-  return s.toFixed(4);
+  let size = nums.length;
+  let sr = Math.max(1, size / 100);
+  let range = getRange(nums);
+  let rr = Math.max(1, range / 100); 
+  // 100 - 1
+  // 1000 - 100
+  // 10000 - 10000
+  return testSecs * sr * 100;
 }
 
 function getNums(size, range) {

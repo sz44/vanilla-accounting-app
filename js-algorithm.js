@@ -79,7 +79,8 @@ function estimate(nums) {
   // 100 - 1
   // 1000 - 10
   // 10000 - 100
-  return testSecs * sizeFactor * rangeFactor;
+  let result = testSecs * sizeFactor * rangeFactor; 
+  return result.toFixed(2);
 }
 
 // for more accuracy would enter true range not [k,-k] ranges
@@ -98,11 +99,10 @@ let n1 = [2,4,-2];
 let m = getMap(n1);
 // console.log(m);
 
-let n2 = getNums(10000,10000);
+let n2 = getNums(100,100);
 
 console.log("e: ", estimate(n2))
 // console.log(getNums(10,10))
 
 // console.log(subsetSum(m,-2))
 // console.log(subsetSums(m,[2,4,5,6]))
-

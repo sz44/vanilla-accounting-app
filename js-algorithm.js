@@ -3,7 +3,10 @@ function getMap(nums) {
   // {sum : contributing number}
   let outMap = new Map();
 
-  let range = getRange(nums);
+  let minSum = nums.reduce((acc,n) => n < 0 ? acc + n : acc, 0);
+  let maxSum = nums.reduce((acc,n) => n > 0 ? acc + n : acc, 0);
+
+  let range = maxSum - minSum + 1;
   let offSet = -minSum;
 
   let prev = Array(range).fill(false); 
@@ -52,26 +55,34 @@ function subsetSums(contMap, targets) {
   return out;
 }
 
-
 function estimate(nums) {
-  let testNums = getNums(100, 100)
+  let testNums = getNums(100, 100);
+  let testRange = getRange(testNums);
   let start = Date.now();
   getMap(testNums);
   let end = Date.now();
-  let elapsed = end - start;
+  let elapsed = Math.max(1, end - start);
   let testSecs = elapsed * 0.001;
-  // size * 100 ns
-  // range ** 10 ns
+  console.log("testSec: ", testSecs);
+
   let size = nums.length;
-  let sr = Math.max(1, size / 100);
   let range = getRange(nums);
-  let rr = Math.max(1, range / 100); 
+  let sizeFactor = (size/100) ** 2;
   // 100 - 1
   // 1000 - 100
   // 10000 - 10000
-  return testSecs * sr * 100;
+
+  let maxNum = Math.max(...nums);
+  let minNum = Math.min(...nums);
+  let largestDiff = Math.max(maxNum, minNum)
+  let rangeFactor = Math.max(1,  largestDiff/ 100); 
+  // 100 - 1
+  // 1000 - 10
+  // 10000 - 100
+  return testSecs * sizeFactor * rangeFactor;
 }
 
+// for more accuracy would enter true range not [k,-k] ranges
 function getNums(size, range) {
   let out = []
   for (let i = 0; i < size; i++) {
@@ -87,7 +98,9 @@ let n1 = [2,4,-2];
 let m = getMap(n1);
 // console.log(m);
 
-console.log(estimate(n1))
+let n2 = getNums(10000,10000);
+
+console.log("e: ", estimate(n2))
 // console.log(getNums(10,10))
 
 // console.log(subsetSum(m,-2))

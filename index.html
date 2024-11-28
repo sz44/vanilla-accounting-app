@@ -336,7 +336,8 @@
         <p>&copy; 2024 Accountant Helper</p>
     </footer>
     <script src="code.js"></script>
-    <script src="js-algorithm.js"></script>
+    <!-- <script src="js-algorithm.js"></script> -->
+    <script src="JSCalculation.js"></script>
     <script>
         let WASMReady = false;
         Module.onRuntimeInitialized = () => {
@@ -360,43 +361,7 @@
         const resultsDiv = document.querySelector("#results");
         const rows = document.querySelector("#rows");
 
-        class Program {
-            leftBox;
-            rightBox;
-            numsArr;
-            rightArr;
-            numsVector;
-            targetsVector;
-            constructor(numsText, targetsText) {
-                this.leftBox = numsText;
-                this.rightBox = targetsText;
-            }
-        }
-
-        let program;
-
-
-        class CPPCalculation {
-            leftArr;
-            rightArr;
-            numsVector;
-            targetsVector;
-            resultMap;
-            constructor(leftArr, rightArr) {
-                numsVector = new Module['vectorInt']();
-                leftArr.forEach(n => numsVector.push_back(n * 100)); // store as int
-
-                targetsVector = new Module['vectorInt']();
-                rightArr.forEach(n => targetsVector.push_back(n * 100)); // store as int
-            }
-            getEstimate() {
-                return Module.estimateTime(numsVector)
-            }
-            getResultMap() {
-            }
-            convertMap() {
-            }
-        }
+        let calcObj;
 
         let leftArr = [];
         let rightArr = [];
@@ -445,8 +410,6 @@
                 return;
             }
 
-            console.log(leftArr, rightArr);
-
             confirmDialog.showModal();
 
             await wait(500);
@@ -454,7 +417,7 @@
             calcObj = new JSCalculation(leftArr, rightArr);
 
             await WASMPromise;
-            calcObj = new CPPCalculation(leftArr, rightArr);
+            // calcObj = new CPPCalculation(leftArr, rightArr);
 
             numsVector = new Module['vectorInt']();
             leftArr.forEach(n => numsVector.push_back(n * 100)); // store as int
@@ -465,6 +428,7 @@
             // const runTimeEstimate = Module.estimateTime(numsVector);
             const runTimeEstimate = calcObj.getEstimate()
 
+
             loader.classList.add("hide");
             estimate.textContent = `Estimated time: ${runTimeEstimate.toFixed(2)} seconds`;
 
@@ -472,7 +436,7 @@
             acceptBtn.disabled = false;
         });
 
-        let results = new Map();
+        // let results = new Map();
         acceptBtn.addEventListener("click", async () => {
             // clear estimate text
             estimate.textContent = "Working please wait...";
@@ -482,16 +446,20 @@
 
             acceptBtn.disabled = true;
             // give time to do the above 2 lines
+            // TODO: test if removing async will remove need for this wait
             await wait(500);
 
             // TODO: use webworker to run on separate thread
             // TODO: handle targets duplicates
-            calcObj.getResultMap();
-            displayTable(calcObj.resultMap);
+
+            // calcObj.resultMap = genResultMap();
+            // const resultMap = calcObj.subsetSums()
             
-            const getResultMap = Module.subsetSums(numsVector, targetsVector);
+            // const getResultMap = Module.subsetSums(numsVector, targetsVector);
+            let results = calcObj.subsetSums();
 
             // convert cpp map to js map
+            /*
             for (let i = 0; i < targetsVector.size(); i++) {
                 const target = targetsVector.get(i);
                 const vector = getResultMap.get(target);
@@ -505,7 +473,7 @@
             }
 
             getResultMap.delete();
-
+            */
             // hide spinner
             // loader.classList.add("hide");
             resultsDiv.classList.remove("hide");
@@ -539,7 +507,7 @@
             rows.innerHTML = "";
             resultsDiv.classList.add("hide");
 
-            results = new Map();
+            // results = new Map();
 
             // TODO: proper memory delete
             if (WASMReady) {

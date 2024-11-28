@@ -1,16 +1,15 @@
 class JSCalculation {
   nums;
   targets;
-  resultMap;
   constructor(leftArr, rightArr) {
     this.nums = leftArr;
     this.targets = rightArr;
   }
 
-  estimateRunTime() {
-    let testNums = this.genNums(100, 100);
+  getEstimate() {
+    let testNums = this.#genNums(100, 100);
     let start = Date.now();
-    this.genResultMap(testNums);
+    this.#genContMap(testNums);
     let end = Date.now();
     let elapsed = Math.max(1, end - start);
     let testSecs = elapsed * 0.001;
@@ -24,10 +23,10 @@ class JSCalculation {
     let rangeFactor = Math.max(1, largestDiff / 100);
 
     let result = testSecs * sizeFactor * rangeFactor;
-    return result.toFixed(2);
+    return result;
   }
 
-  genNums(size, range) {
+  #genNums(size, range) {
     let out = []
     for (let i = 0; i < size; i++) {
       out.push(Math.floor(Math.random() * 2 * range) - range)
@@ -37,10 +36,8 @@ class JSCalculation {
     return out;
   }
 
-  // build solution map
-  genResultMap(input) {
-    let nums = input === undefined ? this.nums : input;
-
+  // build contributions map { sum : first contributing number }
+  #genContMap(nums) {
     let outMap = new Map();
 
     let minSum = nums.reduce((acc,n) => n < 0 ? acc + n : acc, 0);
@@ -64,8 +61,30 @@ class JSCalculation {
       prev = curr.slice();
     }
 
-    if (input === undefined) {
-      this.resultMap = outMap; 
+    return outMap;
+  }
+
+  #subsetSum(contMap, target) {
+    if (!contMap.has(target)) {
+      return [];
     }
+
+    let out = [];
+    while (target !== 0) {
+      out.push(contMap.get(target));
+      target -= contMap.get(target);
+    }
+
+    return out;
+  }
+
+  subsetSums() {
+    let contMap = this.#genContMap(this.nums);
+    if (!contMap) throw new Error("unable to gen contMap");
+    let resultMap = new Map();
+    for (let target of this.targets) {
+      resultMap.set(target, this.#subsetSum(contMap, target));
+    }
+    return resultMap;
   }
 }

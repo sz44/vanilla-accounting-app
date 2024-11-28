@@ -336,6 +336,7 @@
         <p>&copy; 2024 Accountant Helper</p>
     </footer>
     <script src="code.js"></script>
+    <script src="js-algorithm.js"></script>
     <script>
         let WASMReady = false;
         Module.onRuntimeInitialized = () => {
@@ -373,6 +374,29 @@
         }
 
         let program;
+
+
+        class CPPCalculation {
+            leftArr;
+            rightArr;
+            numsVector;
+            targetsVector;
+            resultMap;
+            constructor(leftArr, rightArr) {
+                numsVector = new Module['vectorInt']();
+                leftArr.forEach(n => numsVector.push_back(n * 100)); // store as int
+
+                targetsVector = new Module['vectorInt']();
+                rightArr.forEach(n => targetsVector.push_back(n * 100)); // store as int
+            }
+            getEstimate() {
+                return Module.estimateTime(numsVector)
+            }
+            getResultMap() {
+            }
+            convertMap() {
+            }
+        }
 
         let leftArr = [];
         let rightArr = [];
@@ -425,9 +449,12 @@
 
             confirmDialog.showModal();
 
-            await WASMPromise;
-
             await wait(500);
+
+            calcObj = new JSCalculation(leftArr, rightArr);
+
+            await WASMPromise;
+            calcObj = new CPPCalculation(leftArr, rightArr);
 
             numsVector = new Module['vectorInt']();
             leftArr.forEach(n => numsVector.push_back(n * 100)); // store as int
@@ -435,7 +462,8 @@
             targetsVector = new Module['vectorInt']();
             rightArr.forEach(n => targetsVector.push_back(n * 100)); // store as int
 
-            const runTimeEstimate = Module.estimateTime(numsVector);
+            // const runTimeEstimate = Module.estimateTime(numsVector);
+            const runTimeEstimate = calcObj.getEstimate()
 
             loader.classList.add("hide");
             estimate.textContent = `Estimated time: ${runTimeEstimate.toFixed(2)} seconds`;
@@ -453,13 +481,17 @@
             // loader.classList.remove("hide");
 
             acceptBtn.disabled = true;
-            // give time to do the abouve 2 lines
+            // give time to do the above 2 lines
             await wait(500);
 
             // TODO: use webworker to run on separate thread
             // TODO: handle targets duplicates
+            calcObj.getResultMap();
+            displayTable(calcObj.resultMap);
+            
             const getResultMap = Module.subsetSums(numsVector, targetsVector);
 
+            // convert cpp map to js map
             for (let i = 0; i < targetsVector.size(); i++) {
                 const target = targetsVector.get(i);
                 const vector = getResultMap.get(target);

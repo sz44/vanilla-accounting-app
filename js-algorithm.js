@@ -57,7 +57,6 @@ function subsetSums(contMap, targets) {
 
 function estimate(nums) {
   let testNums = getNums(100, 100);
-  let testRange = getRange(testNums);
   let start = Date.now();
   getMap(testNums);
   let end = Date.now();

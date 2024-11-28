@@ -65,7 +65,6 @@
             display: flex;
             justify-content: center;
             /* align-items: center; */
-            padding: 2em;
         }
 
         .container {
@@ -336,7 +335,6 @@
         <p>&copy; 2024 Accountant Helper</p>
     </footer>
     <script src="code.js"></script>
-    <!-- <script src="js-algorithm.js"></script> -->
     <script src="JSCalculation.js"></script>
     <script>
         let WASMReady = false;
@@ -344,6 +342,7 @@
             WASMReady = true;
         } 
     </script>
+    <script src="CPPCalculation.js"></script>
     <script>
         const leftTextBox = document.querySelector("#leftTextBox");
         const rightTextBox = document.querySelector("#rightTextBox");
@@ -416,7 +415,7 @@
 
             calcObj = new JSCalculation(leftArr, rightArr);
 
-            await WASMPromise;
+            // await WASMPromise;
             // calcObj = new CPPCalculation(leftArr, rightArr);
 
             numsVector = new Module['vectorInt']();
@@ -427,7 +426,6 @@
 
             // const runTimeEstimate = Module.estimateTime(numsVector);
             const runTimeEstimate = calcObj.getEstimate()
-
 
             loader.classList.add("hide");
             estimate.textContent = `Estimated time: ${runTimeEstimate.toFixed(2)} seconds`;

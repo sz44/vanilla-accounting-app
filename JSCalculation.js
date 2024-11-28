@@ -2,12 +2,16 @@ class JSCalculation {
   nums;
   targets;
   constructor(leftArr, rightArr) {
-    this.nums = leftArr;
-    this.targets = rightArr;
+    this.nums = this.removeDecimal(leftArr);
+    this.targets = this.removeDecimal(rightArr);
+  }
+
+  removeDecimal(nums) {
+    return nums.map(n => Math.round(n * 100));
   }
 
   getEstimate() {
-    let testNums = this.#genNums(100, 100);
+    let testNums = this.#genTestNums(100, 100);
     let start = Date.now();
     this.#genContMap(testNums);
     let end = Date.now();
@@ -26,7 +30,7 @@ class JSCalculation {
     return result;
   }
 
-  #genNums(size, range) {
+  #genTestNums(size, range) {
     let out = []
     for (let i = 0; i < size; i++) {
       out.push(Math.floor(Math.random() * 2 * range) - range)
@@ -38,6 +42,8 @@ class JSCalculation {
 
   // build contributions map { sum : first contributing number }
   #genContMap(nums) {
+    if (!nums) console.error("could not gen contribution map, nums is undefined");
+
     let outMap = new Map();
 
     let minSum = nums.reduce((acc,n) => n < 0 ? acc + n : acc, 0);
@@ -71,19 +77,22 @@ class JSCalculation {
 
     let out = [];
     while (target !== 0) {
-      out.push(contMap.get(target));
+      out.push(this.toCurrency(contMap.get(target)));
       target -= contMap.get(target);
     }
 
     return out;
   }
 
+  toCurrency(num) {
+    return num / 100;
+  }
+
   subsetSums() {
     let contMap = this.#genContMap(this.nums);
-    if (!contMap) throw new Error("unable to gen contMap");
     let resultMap = new Map();
     for (let target of this.targets) {
-      resultMap.set(target, this.#subsetSum(contMap, target));
+      resultMap.set(this.toCurrency(target), this.#subsetSum(contMap, target));
     }
     return resultMap;
   }

@@ -151,17 +151,18 @@ std::vector<int> generateTestData(int n, int k) {
 
 // int main() {
 //   // vector<int> nums = {30,-20,50,-800,60,-10};
-//   vector<int> targets = {70,130};
+//   vector<int> nums = {111, 122};
+//   vector<int> targets = {233};
 //   // vector<int> nums1 = {1, 2, 3, 4, 5, 6, 7, 8, 9, 10, -1, -2, -3, -4, -5, -6, -7, -8, -9, -10};
 
-//   auto testNums = generateTestData(1000, 100);
+//   // auto testNums = generateTestData(1000, 100);
 
-//   auto est = estimateTime(testNums);
+//   auto est = estimateTime(nums);
 //   cout << "estimated time: " << est << " seconds" << endl;
 
 //   clock_t start_time = clock();
 //   // auto parent = getTargetsMap(testNums);
-//   auto res = subsetSums(testNums, targets);
+//   auto res = subsetSums(nums, targets);
 //   clock_t end_time = clock();
 //   double elapsed_time = double(end_time - start_time) / CLOCKS_PER_SEC;
 //   cout << "actual time: " << elapsed_time << " seconds" << endl;

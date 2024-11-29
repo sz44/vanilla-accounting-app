@@ -1,0 +1,298 @@
+:root {
+  --green: #293830;
+}
+
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+body,
+html {
+  height: 100%;
+  font-family: Arial, sans-serif;
+  display: flex;
+  flex-direction: column;
+}
+
+/* Top Navigation */
+nav {
+  /* background-color: #333; */
+  background-color: var(--green);
+  color: #fff;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 1em 2em;
+}
+
+.nav-left,
+.nav-center {
+  display: flex;
+  align-items: center;
+}
+
+.nav-left a {
+  color: #fff;
+  text-decoration: none;
+  font-size: 1.2em;
+  font-weight: bold;
+}
+
+.nav-center a {
+  color: #fff;
+  text-decoration: none;
+  margin: 0 0.5em;
+  font-size: 1em;
+  transition: color 0.3s ease;
+}
+
+.nav-center a:hover {
+  color: #ccc;
+}
+
+/* Main Section */
+main {
+  flex: 1;
+  display: flex;
+  justify-content: center;
+  /* align-items: center; */
+}
+
+.container {
+  text-align: center;
+  width: 100%;
+  max-width: 600px;
+}
+
+#big-text {
+  margin: 2em 0;
+}
+
+.instructions {
+  text-align: left;
+  margin-bottom: 1em;
+  font-size: 1em;
+}
+
+.instructions p span {
+  text-decoration: underline;
+}
+
+.input-section {
+  display: flex;
+  gap: 1em;
+  justify-content: center;
+}
+
+.input-section textarea {
+  border: 2px solid green;
+}
+
+.input-section .error {
+  border: 2px solid red;
+}
+
+.labels {
+  display: flex;
+  gap: 1em;
+  justify-content: center;
+}
+
+.box {
+  width: 117px;
+}
+
+textarea {
+  padding: 1em;
+  font-size: 1em;
+  resize: vertical;
+  min-height: 150px;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+}
+
+button {
+  background-color: var(--green);
+  color: #fff;
+  padding: 0.7em 1.5em;
+  font-size: 1em;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+}
+
+button:hover {
+  /* background-color: #555; */
+  background-color: #3a983e;
+}
+
+button[disabled] {
+  background-color: gray;
+}
+
+dialog {
+  margin: auto;
+  padding: 2em;
+  text-align: center;
+}
+
+#estimate {
+  margin-bottom: 2em;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+}
+
+#errorMsg {
+  display: grid;
+  place-items: center;
+  min-height: 1.2rem;
+  margin: 0.5rem 0;
+}
+
+table {
+  border-collapse: collapse;
+}
+
+table td,
+th {
+  /*border: 1px solid black;*/
+  padding: 8px 10px;
+}
+
+#results {
+  margin: 0 0 1rem 0;
+  display: flex;
+  justify-content: center;
+}
+
+.hide {
+  display: none !important;
+}
+
+/* Footer */
+footer {
+  background-color: var(--green);
+  color: #fff;
+  text-align: center;
+  padding: 1em;
+}
+
+.lds-ellipsis {
+  /* change color here */
+  color: #1c4c5b
+}
+
+.lds-ellipsis,
+.lds-ellipsis div {
+  box-sizing: border-box;
+}
+
+.lds-ellipsis {
+  display: inline-block;
+  position: relative;
+  width: 80px;
+  height: 80px;
+}
+
+.lds-ellipsis div {
+  position: absolute;
+  top: 33.33333px;
+  width: 13.33333px;
+  height: 13.33333px;
+  border-radius: 50%;
+  background: currentColor;
+  animation-timing-function: cubic-bezier(0, 1, 1, 0);
+}
+
+.lds-ellipsis div:nth-child(1) {
+  left: 8px;
+  animation: lds-ellipsis1 0.6s infinite;
+}
+
+.lds-ellipsis div:nth-child(2) {
+  left: 8px;
+  animation: lds-ellipsis2 0.6s infinite;
+}
+
+.lds-ellipsis div:nth-child(3) {
+  left: 32px;
+  animation: lds-ellipsis2 0.6s infinite;
+}
+
+.lds-ellipsis div:nth-child(4) {
+  left: 56px;
+  animation: lds-ellipsis3 0.6s infinite;
+}
+
+@keyframes lds-ellipsis1 {
+  0% {
+    transform: scale(0);
+  }
+
+  100% {
+    transform: scale(1);
+  }
+}
+
+@keyframes lds-ellipsis3 {
+  0% {
+    transform: scale(1);
+  }
+
+  100% {
+    transform: scale(0);
+  }
+}
+
+@keyframes lds-ellipsis2 {
+  0% {
+    transform: translate(0, 0);
+  }
+
+  100% {
+    transform: translate(24px, 0);
+  }
+}
+
+.loader {
+  display: inline-block;
+  position: relative;
+  height: 20px;
+  width: 140px;
+  background-image:
+    linear-gradient(#FFF 20px, transparent 0),
+    linear-gradient(#FFF 20px, transparent 0),
+    linear-gradient(#FFF 20px, transparent 0),
+    linear-gradient(#FFF 20px, transparent 0);
+  background-repeat: no-repeat;
+  background-size: 20px auto;
+  background-position: 0 0, 40px 0, 80px 0, 120px 0;
+  animation: pgfill 1s linear infinite;
+}
+
+@keyframes pgfill {
+  0% {
+    background-image: linear-gradient(#FFF 20px, transparent 0), linear-gradient(#FFF 20px, transparent 0), linear-gradient(#FFF 20px, transparent 0), linear-gradient(#FFF 20px, transparent 0);
+  }
+
+  25% {
+    background-image: linear-gradient(#1c4c5b 20px, transparent 0), linear-gradient(#FFF 20px, transparent 0), linear-gradient(#FFF 20px, transparent 0), linear-gradient(#FFF 20px, transparent 0);
+  }
+
+  50% {
+    background-image: linear-gradient(#FFF 20px, transparent 0), linear-gradient(#1c4c5b 20px, transparent 0), linear-gradient(#FFF 20px, transparent 0), linear-gradient(#FFF 20px, transparent 0);
+  }
+
+  75% {
+    background-image: linear-gradient(#FFF 20px, transparent 0), linear-gradient(#FFF 20px, transparent 0), linear-gradient(#1c4c5b 20px, transparent 0), linear-gradient(#FFF 20px, transparent 0);
+  }
+
+  100% {
+    background-image: linear-gradient(#FFF 20px, transparent 0), linear-gradient(#FFF 20px, transparent 0), linear-gradient(#FFF 20px, transparent 0), linear-gradient(#1c4c5b 20px, transparent 0);
+  }
+}

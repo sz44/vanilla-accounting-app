@@ -29,9 +29,9 @@ unordered_map<int, int> getTargetsMap(vector<int> &nums)
   int shift = -minSum; // Offset for negative sums
 
   // DP array to track achievable sums
-  vector<bool> prev(range + 1, false);
+  vector<char> prev(range + 1, false);
   prev[shift] = true;                  // Zero sum is always possible
-  vector<bool> curr(range + 1, false); // avoid reuse of nums (with nagative nums can travel forward so just iterating backwards is not enough)
+  vector<char> curr(range + 1, false); // avoid reuse of nums (with nagative nums can travel forward so just iterating backwards is not enough)
 
   // Update DP for each number
   for (int num : nums)

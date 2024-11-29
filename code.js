@@ -698,7 +698,6 @@ function getWasmImports() {
 // Create the wasm instance.
 // Receives the wasm imports, returns the exports.
 function createWasm() {
-  var info = getWasmImports();
   // Load the wasm module and create an instance of using native support in the JS engine.
   // handle a generated wasm instance, receiving its exports and
   // performing other necessary setup
@@ -739,6 +738,8 @@ function createWasm() {
     // When the regression is fixed, can restore the above PTHREADS-enabled path.
     receiveInstance(result['instance']);
   }
+
+  var info = getWasmImports();
 
   // User shell pages can write their own Module.instantiateWasm = function(imports, successCallback) callback
   // to manually instantiate the Wasm module themselves. This allows pages to
@@ -1037,9 +1038,8 @@ function dbg(...args) {
       assert(typeof ptr == 'number', `UTF8ToString expects a number (got ${typeof ptr})`);
       return ptr ? UTF8ArrayToString(HEAPU8, ptr, maxBytesToRead) : '';
     };
-  var ___assert_fail = (condition, filename, line, func) => {
+  var ___assert_fail = (condition, filename, line, func) =>
       abort(`Assertion failed: ${UTF8ToString(condition)}, at: ` + [filename ? UTF8ToString(filename) : 'unknown filename', line, func ? UTF8ToString(func) : 'unknown function']);
-    };
 
   class ExceptionInfo {
       // excPtr - Thrown object pointer to wrap. Metadata pointer is calculated from it.
@@ -1110,9 +1110,8 @@ function dbg(...args) {
       assert(false, 'Exception thrown, but exception catching is not enabled. Compile with -sNO_DISABLE_EXCEPTION_CATCHING or -sEXCEPTION_CATCHING_ALLOWED=[..] to catch.');
     };
 
-  var __abort_js = () => {
+  var __abort_js = () =>
       abort('native code called abort()');
-    };
 
   var __embind_register_bigint = (primitiveType, name, size, minRange, maxRange) => {};
 
@@ -1877,8 +1876,10 @@ function dbg(...args) {
       var func = wasmTableMirror[funcPtr];
       if (!func) {
         if (funcPtr >= wasmTableMirror.length) wasmTableMirror.length = funcPtr + 1;
+        /** @suppress {checkTypes} */
         wasmTableMirror[funcPtr] = func = wasmTable.get(funcPtr);
       }
+      /** @suppress {checkTypes} */
       assert(wasmTable.get(funcPtr) == func, 'JavaScript-side Wasm function table mirror is out of date!');
       return func;
     };
@@ -2881,9 +2882,7 @@ function dbg(...args) {
       return outPtr - startPtr;
     };
   
-  var lengthBytesUTF16 = (str) => {
-      return str.length*2;
-    };
+  var lengthBytesUTF16 = (str) => str.length*2;
   
   var UTF32ToString = (ptr, maxBytesToRead) => {
       assert(ptr % 4 == 0, 'Pointer passed to UTF32ToString must be aligned to four bytes!');
@@ -3324,9 +3323,9 @@ var missingLibrarySymbols = [
   'wasiOFlagsToMuslOFlags',
   'initRandomFill',
   'randomFill',
-  'createDyncallWrapper',
   'safeSetTimeout',
   'setImmediateWrapped',
+  'safeRequestAnimationFrame',
   'clearImmediateWrapped',
   'polyfillSetImmediate',
   'registerPostMainLoop',
@@ -3337,7 +3336,6 @@ var missingLibrarySymbols = [
   'makePromiseCallback',
   'findMatchingCatch',
   'Browser_asyncPrepareDataCounter',
-  'safeRequestAnimationFrame',
   'isLeapYear',
   'ydayFromDate',
   'arraySum',

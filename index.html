@@ -81,6 +81,8 @@
             }
 
             let jsCalc = new JSCalculation(nums, [5050]);
+            console.log(jsCalc.nums);
+            console.log(jsCalc.targets);
             let jsEst = jsCalc.getEstimate()
             console.log("js estimate: ", jsEst);
 
@@ -89,19 +91,15 @@
             let end = Date.now();
             console.log("js run: ", (end - start)/1000);
 
-            let numsVec = new Module['vectorInt']();
-            nums.forEach( n => numsVec.push_back(n));
-            let targetsVec = new Module['vectorInt']();
-            targetsVec.push_back(5050)
-
-            let cppEst = Module.estimateTime(numsVec);
-            console.log(cppEst);
+            // class wasm access
+            let cppCalc = new CPPCalculation(nums, [5050]);
+            let cppObjEst = cppCalc.getEstimate();
+            console.log("cpp estimate: ", cppObjEst);
 
             start = Date.now();
-            Module.subsetSums(numsVec, targetsVec);
+            cppCalc.subsetSums();
             end = Date.now();
-            console.log("wasm run: ", (end - start)/1000);
-
+            console.log("cpp run: ", (end - start)/1000);
         }
 
         const WASMPromise = new Promise((resolve) => {

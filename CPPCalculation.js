@@ -5,8 +5,13 @@ class CPPCalculation {
   targetsVector = null;
   
   constructor(leftArr, rightArr) {
-    this.nums = this.removeDecimal(leftArr);
-    this.targets = this.removeDecimal(rightArr);
+    this.nums = this.removeDecimals(leftArr);
+    this.numsVector = new Module['vectorInt']();
+    this.nums.forEach(n => this.numsVector.push_back(n)); // store as int
+
+    this.targets = this.removeDecimals(rightArr);
+    this.targetsVector = new Module['vectorInt']();
+    this.targets.forEach(n => this.targetsVector.push_back(n)); // store as int
   }
 
   cleanUp() {
@@ -20,24 +25,11 @@ class CPPCalculation {
     }
   }
 
-  removeDecimal(nums) {
+  removeDecimals(nums) {
     return nums.map(n => Math.round(n * 100));
   }
 
-  async initVectors() {
-    await WASMPromise;
-
-    this.numsVector = new Module['vectorInt']();
-    this.nums.forEach(n => this.numsVector.push_back(n)); // store as int
-    
-    this.targetsVector = new Module['vectorInt']();
-    this.targets.forEach(n => this.targetsVector.push_back(n)); // store as int
-  }
-
-  async getEstimate() {
-    if (!this.numsVector || !this.targetsVector) {
-      await this.initVectors();
-    }
+  getEstimate() {
     return Module.estimateTime(this.numsVector);
   }
 
@@ -62,19 +54,13 @@ class CPPCalculation {
     return JSMap;
   }
 
-  async subsetSumsCPP() {
-    if (!this.numsVector || !this.targetsVector) {
-      await this.initVectors();
-    }
-    let start = Date.now();
+  subsetSumsCPP() {
     let subsetSums =  Module.subsetSums(this.numsVector, this.targetsVector);
-    let end = Date.now();
-    console.log("Module.subsetSums time: ", (end-start)/1000);
     return subsetSums;
   }
 
-  async subsetSums() {
-    return this.CPP2JSMap(await this.subsetSumsCPP());
+  subsetSums() {
+    return this.CPP2JSMap(this.subsetSumsCPP());
   }
 
 }

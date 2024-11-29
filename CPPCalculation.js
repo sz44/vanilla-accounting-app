@@ -3,16 +3,8 @@ class CPPCalculation {
   targets;
   numsVector = null;
   targetsVector = null;
-  WASMPromise;
+  
   constructor(leftArr, rightArr) {
-    this.WASMPromise = new Promise((resolve) => {
-      let interval = setInterval(() => {
-        if (WASMReady) {
-          clearInterval(interval);
-          resolve();
-        }
-      }, 50);
-    });
     this.nums = this.removeDecimal(leftArr);
     this.targets = this.removeDecimal(rightArr);
   }
@@ -33,7 +25,7 @@ class CPPCalculation {
   }
 
   async initVectors() {
-    await this.WASMPromise;
+    await WASMPromise;
 
     this.numsVector = new Module['vectorInt']();
     this.nums.forEach(n => this.numsVector.push_back(n)); // store as int

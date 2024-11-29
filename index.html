@@ -75,7 +75,15 @@
         let WASMReady = false;
         Module.onRuntimeInitialized = () => {
             WASMReady = true;
-        } 
+        }
+        const WASMPromise = new Promise((resolve) => {
+            let interval = setInterval(() => {
+                if (WASMReady) {
+                    clearInterval(interval);
+                    resolve();
+                }
+            }, 50);
+        });
     </script>
     <script src="CPPCalculation.js"></script>
     <script>

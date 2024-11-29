@@ -136,6 +136,10 @@
             background-color: #3a983e;
         }
 
+        button[disabled] {
+            background-color: gray;
+        }
+
         dialog { 
             margin: auto;
             padding: 2em;
@@ -411,7 +415,7 @@
 
             confirmDialog.showModal();
 
-            await wait(500);
+            await wait(100);
 
             calcObj = new JSCalculation(leftArr, rightArr);
 
@@ -445,7 +449,7 @@
             acceptBtn.disabled = true;
             // give time to do the above 2 lines
             // TODO: test if removing async will remove need for this wait
-            await wait(500);
+            await wait(100);
 
             // TODO: use webworker to run on separate thread
             // TODO: handle targets duplicates

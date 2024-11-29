@@ -151,9 +151,12 @@ std::vector<int> generateTestData(int n, int k) {
 
 // int main() {
 //   // vector<int> nums = {30,-20,50,-800,60,-10};
-//   vector<int> nums = {111, 122};
-//   vector<int> targets = {233};
+//   vector<int> nums = {};
+//   vector<int> targets = {5050};
 //   // vector<int> nums1 = {1, 2, 3, 4, 5, 6, 7, 8, 9, 10, -1, -2, -3, -4, -5, -6, -7, -8, -9, -10};
+//   for (int i = 1; i <= 330; i++) {
+//     nums.push_back(i);
+//   }
 
 //   // auto testNums = generateTestData(1000, 100);
 

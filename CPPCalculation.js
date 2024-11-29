@@ -4,7 +4,6 @@ class CPPCalculation {
   numsVector = null;
   targetsVector = null;
   WASMPromise;
-  WASMPromise2;
   constructor(leftArr, rightArr) {
     this.WASMPromise = new Promise((resolve) => {
       let interval = setInterval(() => {
@@ -14,28 +13,33 @@ class CPPCalculation {
         }
       }, 50);
     });
-    // this.WASMPromise2 = new Promise((resolve) => {
-    //   Module.onRuntimeInitialized = () => {
-    //     resolve();
-    //   }
-    // });
-    this.nums = leftArr;
-    this.targets = rightArr;
-    console.log("constructor", this.nums, this.targets);
+    this.nums = this.removeDecimal(leftArr);
+    this.targets = this.removeDecimal(rightArr);
   }
 
-  removeDecimal(f) {
-    return Math.round(f * 100);
+  cleanUp() {
+    if (this.numsVector) {
+      this.numsVector.delete();
+      this.numsVector = null;
+    }
+    if (this.targetsVector) {
+      this.targetsVector.delete();
+      this.targetsVector = null;
+    }
+  }
+
+  removeDecimal(nums) {
+    return nums.map(n => Math.round(n * 100));
   }
 
   async initVectors() {
-    await WASMPromise;
+    await this.WASMPromise;
 
     this.numsVector = new Module['vectorInt']();
-    this.nums.forEach(n => this.numsVector.push_back(this.removeDecimal(n))); // store as int
+    this.nums.forEach(n => this.numsVector.push_back(n)); // store as int
     
     this.targetsVector = new Module['vectorInt']();
-    this.targets.forEach(n => this.targetsVector.push_back(this.removeDecimal(n))); // store as int
+    this.targets.forEach(n => this.targetsVector.push_back(n)); // store as int
   }
 
   async getEstimate() {
@@ -70,8 +74,6 @@ class CPPCalculation {
     if (!this.numsVector || !this.targetsVector) {
       await this.initVectors();
     }
-
-    console.log("subsetSumsCPP", this.nums, this.targets);
     return Module.subsetSums(this.numsVector, this.targetsVector);
   }
 

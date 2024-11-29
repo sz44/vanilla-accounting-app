@@ -96,4 +96,6 @@ class JSCalculation {
     }
     return resultMap;
   }
+
+  cleanUp() {}
 }

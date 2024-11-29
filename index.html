@@ -144,11 +144,8 @@
             await wait(100);
 
             // calcObj = new JSCalculation(leftArr, rightArr);
-
-            // await WASMPromise;
             calcObj = new CPPCalculation(leftArr, rightArr);
 
-            // const runTimeEstimate = Module.estimateTime(numsVector);
             const runTimeEstimate = await calcObj.getEstimate()
 
             loader.classList.add("hide");
@@ -158,7 +155,6 @@
             acceptBtn.disabled = false;
         });
 
-        // let results = new Map();
         acceptBtn.addEventListener("click", async () => {
             // clear estimate text
             estimate.textContent = "Working please wait...";
@@ -173,29 +169,8 @@
 
             // TODO: use webworker to run on separate thread
             // TODO: handle targets duplicates
-
-            // calcObj.resultMap = genResultMap();
-            // const resultMap = calcObj.subsetSums()
-            
-            // const getResultMap = Module.subsetSums(numsVector, targetsVector);
             let results = await calcObj.subsetSums();
 
-            // convert cpp map to js map
-            /*
-            for (let i = 0; i < targetsVector.size(); i++) {
-                const target = targetsVector.get(i);
-                const vector = getResultMap.get(target);
-
-                const jsArr = [];
-                for (let j=0; j<vector.size(); j++) {
-                    let n = vector.get(j);
-                    jsArr.push(n * 0.01);
-                }
-                results.set(target * 0.01, jsArr);
-            }
-
-            getResultMap.delete();
-            */
             // hide spinner
             // loader.classList.add("hide");
             resultsDiv.classList.remove("hide");
@@ -229,28 +204,7 @@
             rows.innerHTML = "";
             resultsDiv.classList.add("hide");
 
-            // results = new Map();
-
-            // TODO: proper memory delete
-            // if (WASMReady) {
-            //     if (numsVector) {
-            //         numsVector.delete();
-            //         numsVector = undefined;
-            //     }
-            //     if (targetsVector) {
-            //         targetsVector.delete();
-            //         targetsVector = undefined;
-            //     }
-            // } 
-        });
-
-        const WASMPromise = new Promise((resolve) => {
-            let interval = setInterval(() => {
-                if (WASMReady) {
-                    clearInterval(interval);
-                    resolve();
-                }
-            }, 50);
+            calcObj.cleanUp();
         });
 
         const wait = (t) => {

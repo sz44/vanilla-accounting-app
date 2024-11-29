@@ -24,7 +24,7 @@
     <!-- Main Section -->
     <main>
         <div class="container">
-            <h1 id="big-text">Reconcilliation Helper</h1>
+            <h1 id="big-text">Reconciliation Helper</h1>
             <div class="instructions">
                 <p><span>Instructions</span>: Enter numbers in the boxes below. One number per row.
                     Left column should hold individual numbers and right column aggragated sums.
@@ -75,7 +75,35 @@
         let WASMReady = false;
         Module.onRuntimeInitialized = () => {
             WASMReady = true;
+            let nums = [];
+            for (let i = 1; i <= 100; i++) {
+                nums.push(i);
+            }
+
+            let jsCalc = new JSCalculation(nums, [5050]);
+            let jsEst = jsCalc.getEstimate()
+            console.log("js estimate: ", jsEst);
+
+            let start = Date.now();
+            jsCalc.subsetSums();
+            let end = Date.now();
+            console.log("js run: ", (end - start)/1000);
+
+            let numsVec = new Module['vectorInt']();
+            nums.forEach( n => numsVec.push_back(n));
+            let targetsVec = new Module['vectorInt']();
+            targetsVec.push_back(5050)
+
+            let cppEst = Module.estimateTime(numsVec);
+            console.log(cppEst);
+
+            start = Date.now();
+            Module.subsetSums(numsVec, targetsVec);
+            end = Date.now();
+            console.log("wasm run: ", (end - start)/1000);
+
         }
+
         const WASMPromise = new Promise((resolve) => {
             let interval = setInterval(() => {
                 if (WASMReady) {
@@ -103,7 +131,8 @@
         const resultsDiv = document.querySelector("#results");
         const rows = document.querySelector("#rows");
 
-        let calcObj;
+        let calcObj1;
+        let calcObj2;
 
         function getNumbers(input) {
             let out = [];
@@ -126,6 +155,7 @@
 
             return out;
         }
+        //TODO: download excel results button
 
         submitBtn.addEventListener("click", async () => {
             leftTextBox.classList.remove("error");
@@ -151,13 +181,18 @@
 
             await wait(100);
 
-            // calcObj = new JSCalculation(leftArr, rightArr);
-            calcObj = new CPPCalculation(leftArr, rightArr);
+            calcObj1 = new JSCalculation(leftArr, rightArr);
+            calcObj2 = new CPPCalculation(leftArr, rightArr);
 
-            const runTimeEstimate = await calcObj.getEstimate()
+            const runTimeEstimate1 = await calcObj1.getEstimate()
+            const runTimeEstimate2 = await calcObj2.getEstimate()
 
             loader.classList.add("hide");
-            estimate.textContent = `Estimated time: ${runTimeEstimate.toFixed(2)} seconds`;
+            estimate.innerHTML = `
+                <div>Estimated time slow: ${runTimeEstimate1.toFixed(2)} seconds</div> 
+                <div>Estimated time fast: ${runTimeEstimate2.toFixed(2)} seconds</div> 
+            `
+            // estimate.textContent = `Estimated time: ${runTimeEstimate.toFixed(2)} seconds`;
 
             closeBtn.disabled = false;
             acceptBtn.disabled = false;
@@ -177,7 +212,7 @@
 
             // TODO: use webworker to run on separate thread
             // TODO: handle targets duplicates
-            let results = await calcObj.subsetSums();
+            let results = await calcObj2.subsetSums();
 
             // hide spinner
             // loader.classList.add("hide");
@@ -212,7 +247,7 @@
             rows.innerHTML = "";
             resultsDiv.classList.add("hide");
 
-            calcObj.cleanUp();
+            calcObj2.cleanUp();
         });
 
         const wait = (t) => {

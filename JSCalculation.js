@@ -18,13 +18,22 @@ class JSCalculation {
     let elapsed = Math.max(1, end - start);
     let testSecs = elapsed * 0.001;
 
-    let size = this.nums.length;
-    let sizeFactor = (size / 100) ** 2;
+    let minSum1 = testNums.reduce((acc,n) => n < 0 ? acc + n : acc, 0);
+    let maxSum1 = testNums.reduce((acc,n) => n > 0 ? acc + n : acc, 0);
+    let range1 = maxSum1 - minSum1;
 
-    let maxNum = Math.max(...this.nums);
-    let minNum = Math.min(...this.nums);
-    let largestDiff = Math.max(maxNum, minNum)
-    let rangeFactor = Math.max(1, largestDiff / 100);
+    // let maxNum = Math.max(...this.nums);
+    // let minNum = Math.min(...this.nums);
+    // let largestDiff = Math.max(maxNum, minNum)
+    let minSum = this.nums.reduce((acc,n) => n < 0 ? acc + n : acc, 0);
+    let maxSum = this.nums.reduce((acc,n) => n > 0 ? acc + n : acc, 0);
+    let range = maxSum - minSum;
+
+    let rangeFactor = Math.max(1, range / range1);
+
+    let size = this.nums.length;
+    // let sizeFactor = (size / 100) ** 2;
+    let sizeFactor = Math.max(1, size / 100);
 
     let result = testSecs * sizeFactor * rangeFactor;
     return result;
@@ -33,7 +42,7 @@ class JSCalculation {
   #genTestNums(size, range) {
     let out = []
     for (let i = 0; i < size; i++) {
-      out.push(Math.floor(Math.random() * 2 * range) - range)
+      out.push(Math.floor(Math.random() * 2 * range + 1) - range)
     }
     out.push(-range)
     out.push(range)

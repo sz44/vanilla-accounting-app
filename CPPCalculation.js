@@ -66,7 +66,11 @@ class CPPCalculation {
     if (!this.numsVector || !this.targetsVector) {
       await this.initVectors();
     }
-    return Module.subsetSums(this.numsVector, this.targetsVector);
+    let start = Date.now();
+    let subsetSums =  Module.subsetSums(this.numsVector, this.targetsVector);
+    let end = Date.now();
+    console.log("Module.subsetSums time: ", (end-start)/1000);
+    return subsetSums;
   }
 
   async subsetSums() {

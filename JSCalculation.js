@@ -11,16 +11,24 @@ class JSCalculation {
   }
 
   getEstimate() {
-    let testNums = this.#genTestNums(100, 100);
+    // let testNums = this.#genTestNums(100, 100);
+    // size = 100, range = 5050
+    let testSize = 100;
+    let testRange = 5050;
+    let testNums = [];
+    for (let n = 1; n <= testSize; n++) {
+      testNums.push(n);
+    }
+
     let start = Date.now();
     this.#genContMap(testNums);
     let end = Date.now();
     let elapsed = Math.max(1, end - start);
     let testSecs = elapsed * 0.001;
 
-    let minSum1 = testNums.reduce((acc,n) => n < 0 ? acc + n : acc, 0);
-    let maxSum1 = testNums.reduce((acc,n) => n > 0 ? acc + n : acc, 0);
-    let range1 = maxSum1 - minSum1;
+    // let minSum1 = testNums.reduce((acc,n) => n < 0 ? acc + n : acc, 0);
+    // let maxSum1 = testNums.reduce((acc,n) => n > 0 ? acc + n : acc, 0);
+    // let range1 = maxSum1 - minSum1;
 
     // let maxNum = Math.max(...this.nums);
     // let minNum = Math.min(...this.nums);
@@ -29,11 +37,11 @@ class JSCalculation {
     let maxSum = this.nums.reduce((acc,n) => n > 0 ? acc + n : acc, 0);
     let range = maxSum - minSum;
 
-    let rangeFactor = Math.max(1, range / range1);
+    let rangeFactor = Math.max(1, range / testRange);
 
     let size = this.nums.length;
     // let sizeFactor = (size / 100) ** 2;
-    let sizeFactor = Math.max(1, size / 100);
+    let sizeFactor = Math.max(1, size / testSize);
 
     let result = testSecs * sizeFactor * rangeFactor;
     return result;
@@ -108,3 +116,5 @@ class JSCalculation {
 
   cleanUp() {}
 }
+
+// module.exports = JSCalculation;

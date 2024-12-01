@@ -76,13 +76,11 @@
         Module.onRuntimeInitialized = () => {
             WASMReady = true;
             let nums = [];
-            for (let i = 1; i <= 200; i++) {
+            for (let i = 1; i <= 600; i++) {
                 nums.push(i);
             }
 
             let jsCalc = new JSCalculation(nums, [5050]);
-            console.log(jsCalc.nums);
-            console.log(jsCalc.targets);
             let jsEst = jsCalc.getEstimate()
             console.log("js estimate: ", jsEst);
 

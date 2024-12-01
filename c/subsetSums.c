@@ -21,8 +21,14 @@ typedef struct Map {
 // key2 => val
 // key3 => val
 
-int* genContTable(int nums[]) {
+int* genContTable(int nums[], int len) {
+  int minSum = 0;
+  int maxSum = 0;
+  int range = 0;
 
+  for (int i = 0; i < len; i++) {
+    
+  }
 }
 
 int main() {

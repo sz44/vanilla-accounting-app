@@ -43,7 +43,7 @@ class JSCalculation {
     // let sizeFactor = (size / 100) ** 2;
     let sizeFactor = Math.max(1, size / testSize);
 
-    let result = testSecs * sizeFactor * rangeFactor;
+    let result = testSecs * sizeFactor * rangeFactor * 0.5;
     return result;
   }
 

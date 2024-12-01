@@ -11,7 +11,7 @@
     <!-- Top Navigation -->
     <nav>
         <div class="nav-left">
-            <a href="#">Home</a>
+            <a href="/static/">Home</a>
         </div>
         <div class="nav-center">
             <a href="#">FAQ</a>
@@ -42,6 +42,35 @@
             <button type="submit" id="submit">Submit</button>
         </div>
     </main>
+
+    <div id="box">
+        <div id="options">
+            <div class="speed">
+                <h3>Normal</h3>
+                <div>
+                    <p>Estimated Run Time</p>
+                    <p>123.4</p>
+                </div>
+                <button>Run >></button>
+            </div>
+            <div class="speed">
+                <h3>Fast</h3>
+                <div>
+                    <p>Estimated Run Time</p>
+                    <p>12.34</p>
+                </div>
+                <button>Run >></button>
+            </div>
+            <div class="speed">
+                <h3>Super</h3>
+                <div>
+                    <p>Estimated Run Time</p>
+                    <p>1.234</p>
+                </div>
+                <button>Run >></button>
+            </div>
+        </div>
+    </div>
 
     <!-- Confirm Dialog-->
     <dialog id="confirmDialog">
@@ -75,29 +104,6 @@
         let WASMReady = false;
         Module.onRuntimeInitialized = () => {
             WASMReady = true;
-            let nums = [];
-            for (let i = 1; i <= 600; i++) {
-                nums.push(i);
-            }
-
-            let jsCalc = new JSCalculation(nums, [5050]);
-            let jsEst = jsCalc.getEstimate()
-            console.log("js estimate: ", jsEst);
-
-            let start = Date.now();
-            jsCalc.subsetSums();
-            let end = Date.now();
-            console.log("js run: ", (end - start)/1000);
-
-            // class wasm access
-            let cppCalc = new CPPCalculation(nums, [5050]);
-            let cppObjEst = cppCalc.getEstimate();
-            console.log("cpp estimate: ", cppObjEst);
-
-            start = Date.now();
-            cppCalc.subsetSums();
-            end = Date.now();
-            console.log("cpp run: ", (end - start)/1000);
         }
 
         const WASMPromise = new Promise((resolve) => {
@@ -151,7 +157,6 @@
 
             return out;
         }
-        //TODO: download excel results button
 
         submitBtn.addEventListener("click", async () => {
             leftTextBox.classList.remove("error");

@@ -296,3 +296,34 @@ footer {
     background-image: linear-gradient(#FFF 20px, transparent 0), linear-gradient(#FFF 20px, transparent 0), linear-gradient(#FFF 20px, transparent 0), linear-gradient(#1c4c5b 20px, transparent 0);
   }
 }
+
+#box {
+  display: flex;
+  justify-content: center;
+}
+
+#options {
+  display: flex;
+  /* background: #3a983e; */
+  justify-content: space-between;
+  border: 1px solid black;
+  padding: 1rem;
+  max-width: 600px;
+  width: 100%;
+}
+
+.speed {
+  display: flex;
+  flex-direction: column;
+  padding: 1rem;
+  text-align: center;
+  border: 1px solid black;
+}
+
+.speed div {
+  margin: 3rem 0;
+}
+
+.speed button {
+  /* margin-top: auto; */
+}

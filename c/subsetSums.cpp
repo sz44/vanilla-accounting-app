@@ -91,16 +91,23 @@ map<int, vector<int>> subsetSums(vector<int> &nums, vector<int> &targets) {
 double estimateTime(vector<int> &nums) {
     // range -55 - 55 = 110
     // vector<int> nums1 = {1, 2, 3, 4, 5, 6, 7, 8, 9, 10, -1, -2, -3, -4, -5, -6, -7, -8, -9, -10};
-    auto nums1 = generateTestData(100,100);
+    int testSize = 100;
+    auto testNums = generateTestData(testSize,100);
+    int testRange = 5050;
+    // vector<int> testNums;
+    // for (int i = 1; i <= testSize; i++) {
+    //   testNums.push_back(i);
+    // }
+
     clock_t start_time = clock();
-    auto parent = getTargetsMap(nums1);
+    auto parent = getTargetsMap(testNums);
     clock_t end_time = clock();
     double elapsed_time = double(end_time - start_time) / CLOCKS_PER_SEC;
     // elapsed_time = max(1.0, elapsed_time);
 
     int minSum1 = 0;
     int maxSum1 = 0;
-    for (auto &n:nums1) {
+    for (auto &n:testNums) {
       if (n<0) {
         minSum1 += n;
       } else {
@@ -108,7 +115,7 @@ double estimateTime(vector<int> &nums) {
       }
     }
 
-    int range1 = maxSum1 - minSum1;
+    testRange = maxSum1 - minSum1;
 
     int minSum = 0;
     int maxSum = 0;
@@ -123,11 +130,11 @@ double estimateTime(vector<int> &nums) {
     int range = maxSum - minSum;
 
     // size ratio = 100, range ratio = 10
-    double sr = static_cast<double>(nums.size()) / 100;
+    double sr = static_cast<double>(nums.size()) / testSize;
     if (sr < 1) {
         sr = 1;
     }
-    double rr = static_cast<double>(range) / static_cast<double>(range1);
+    double rr = static_cast<double>(range) / static_cast<double>(testRange);
     if (rr < 1) {
         rr = 1;
     }
@@ -154,7 +161,7 @@ std::vector<int> generateTestData(int n, int k) {
 //   vector<int> nums = {};
 //   vector<int> targets = {5050};
 //   // vector<int> nums1 = {1, 2, 3, 4, 5, 6, 7, 8, 9, 10, -1, -2, -3, -4, -5, -6, -7, -8, -9, -10};
-//   for (int i = 1; i <= 330; i++) {
+//   for (int i = 1; i <= 1000; i++) {
 //     nums.push_back(i);
 //   }
 

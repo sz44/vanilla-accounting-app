@@ -173,15 +173,16 @@
             await wait(100);
 
             calcObj1 = new JSCalculation(leftArr, rightArr);
-            calcObj2 = new CPPCalculation(leftArr, rightArr);
+            // calcObj2 = new CPPCalculation(leftArr, rightArr);
+            calcObj2 = {}
 
             const runTimeEstimate1 = await calcObj1.getEstimate()
-            const runTimeEstimate2 = await calcObj2.getEstimate()
+            // const runTimeEstimate2 = await calcObj2.getEstimate()
 
             loader.classList.add("hide");
             estimate.innerHTML = `
                 <div>Estimated time slow: ${runTimeEstimate1.toFixed(2)} seconds</div> 
-                <div>Estimated time fast: ${runTimeEstimate2.toFixed(2)} seconds</div> 
+                <div>Estimated time fast: ${'runTimeEstimate2.toFixed(2)'} seconds</div> 
             `
             // estimate.textContent = `Estimated time: ${runTimeEstimate.toFixed(2)} seconds`;
 
@@ -203,7 +204,8 @@
 
             // TODO: use webworker to run on separate thread
             // TODO: handle targets duplicates
-            let results = await calcObj2.subsetSums();
+            // let results = await calcObj2.subsetSums();
+            let results = await calcObj1.subsetSums();
 
             // hide spinner
             // loader.classList.add("hide");
@@ -238,7 +240,7 @@
             rows.innerHTML = "";
             resultsDiv.classList.add("hide");
 
-            calcObj2.cleanUp();
+            // calcObj2.cleanUp();
         });
 
         const wait = (t) => {
